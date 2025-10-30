@@ -13,6 +13,11 @@ module.exports = {
         'black-2': '#666876',
         'black-3': '#8C8E98',
         background: '#FCFCFC',
+        status: {
+          safe: '#34C759',
+          warning: '#FF9500',
+          danger: '#FF3B30',
+        },
       },
     },
   },
