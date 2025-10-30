@@ -1,5 +1,5 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -13,62 +13,56 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Product, SortType } from './types';
+import { calculateDaysLeft, getDdayString, sortProducts } from './utils';
 
 const sampleItems: Product[] = [
   {
     id: '1',
     name: '우유',
-    dday: 'D-8',
-    date: '2025-11-08',
-    status: 'safe',
-    image: 'https://placehold.co/100x100/E5EFFF/0061FF?text=Milk',
+    exp_date: '2025-11-08',
+    image: 'https://placehold.co/100x100',
     createdAt: '2025-10-28T10:00:00Z',
   },
   {
     id: '2',
     name: '유기농 식빵',
-    dday: 'D-2',
-    date: '2025-11-01',
-    status: 'danger',
-    image: 'https://placehold.co/100x100/F8D7DA/FF3B30?text=Bread',
+    exp_date: '2025-10-31',
+    image: 'https://placehold.co/100x100',
     createdAt: '2025-10-29T11:00:00Z',
   },
   {
     id: '3',
     name: '신선한 계란 (10구)',
-    dday: 'D-4',
-    date: '2025-11-03',
-    status: 'warning',
-    image: 'https://placehold.co/100x100/FFF3CD/FF9500?text=Eggs',
+    exp_date: '2025-11-03',
+    image: 'https://placehold.co/100x100',
     createdAt: '2025-10-30T09:00:00Z',
   },
   {
     id: '4',
     name: '아보카도',
-    dday: 'D-1',
-    date: '2025-10-31',
-    status: 'danger',
-    image: 'https://placehold.co/100x100/C8E6C9/34C759?text=Avocado',
+    exp_date: '2025-10-30',
+    image: 'https://placehold.co/100x100',
     createdAt: '2025-10-25T15:00:00Z',
+  },
+  {
+    id: '5',
+    name: '오렌지',
+    exp_date: '2025-10-29',
+    image: 'https://placehold.co/100x100',
+    createdAt: '2025-10-22T10:00:00Z',
+  },
+  {
+    id: '6',
+    name: '돈까스',
+    exp_date: '2025-11-30',
+    image: 'https://placehold.co/100x100',
+    createdAt: '2025-09-28T10:00:00Z',
   },
 ];
 
 const categories = ['전체', '냉장', '냉동', '실온', '화장품', '기타'];
 
 const sortOptions: SortType[] = ['유통기한 임박순', '최신 등록순', '이름순'];
-
-const getStatusClass = (status: string) => {
-  switch (status) {
-    case 'danger':
-      return 'text-status-danger';
-    case 'warning':
-      return 'text-status-warning';
-    case 'safe':
-      return 'text-status-safe';
-    default:
-      return 'text-black-3';
-  }
-};
 
 export default function Home() {
   const [currentCategory, setCurrentCategory] = useState('전체');
@@ -77,19 +71,7 @@ export default function Home() {
 
   const sortedItems = useMemo(() => {
     const itemsCopy = [...sampleItems];
-
-    switch (currentSortType) {
-      case '유통기한 임박순':
-        return itemsCopy.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-      case '최신 등록순':
-        return itemsCopy.sort(
-          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      case '이름순':
-        return itemsCopy.sort((a, b) => a.name.localeCompare(b.name));
-      default:
-        return itemsCopy;
-    }
+    return sortProducts(itemsCopy, currentSortType);
   }, [currentSortType]);
 
   const handleSelectSort = (option: SortType) => {
@@ -156,37 +138,51 @@ export default function Home() {
       {/* Product List */}
       <FlatList
         data={sortedItems}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            className="flex-row items-center rounded-2xl border border-gray-100 bg-white p-3 pr-4 shadow-sm"
-            style={{
-              shadowColor: '#000',
-              shadowOpacity: 0.05,
-              shadowRadius: 5,
-              shadowOffset: { width: 0, height: 3 },
-              elevation: 3,
-            }}
-          >
-            <Image
-              source={{ uri: item.image }}
-              className="h-20 w-20 rounded-lg bg-gray-100"
-              resizeMode="cover"
-            />
-            {/* 상품명, 유통기한 */}
-            <View className="mx-4 flex-1">
-              <Text className="text-lg font-semibold text-black-1" numberOfLines={1}>
-                {item.name}
-              </Text>
-              <Text className="text-sm text-black-2 mt-2">{item.date.replace(/-/g, '.')} 까지</Text>
-            </View>
-            {/* D-Day */}
-            <View>
-              <Text className={`text-lg font-bold ${getStatusClass(item.status)}`}>
-                {item.dday}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
+        renderItem={({ item }) => {
+          const daysLeft = calculateDaysLeft(item.exp_date);
+
+          return (
+            <TouchableOpacity
+              className="flex-row items-center rounded-2xl border border-gray-100 bg-white p-3 pr-4 shadow-sm"
+              style={{
+                shadowColor: '#000',
+                shadowOpacity: 0.05,
+                shadowRadius: 5,
+                shadowOffset: { width: 0, height: 3 },
+                elevation: 3,
+              }}
+            >
+              <Image
+                source={{ uri: item.image }}
+                className="h-20 w-20 rounded-lg bg-gray-100"
+                resizeMode="cover"
+              />
+              {/* 상품명, 유통기한 */}
+              <View className="mx-4 flex-1">
+                <Text className="text-lg font-semibold text-black-1" numberOfLines={1}>
+                  {item.name}
+                </Text>
+                <Text className="text-sm text-black-2 mt-2">
+                  {item.exp_date.replace(/-/g, '.')} 까지
+                </Text>
+              </View>
+              {/* D-Day */}
+              <View>
+                <Text
+                  className={`text-lg font-bold ${
+                    daysLeft <= 0
+                      ? 'text-status-danger'
+                      : daysLeft <= 5
+                      ? 'text-status-warning'
+                      : 'text-status-safe'
+                  }`}
+                >
+                  {getDdayString(daysLeft)}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         className="flex-1 px-4"
