@@ -3,6 +3,7 @@ export interface Product {
   name: string;
   exp_date: string; // 'YYYY-MM-DD' 형식
   image: string;
+  category: string;
   createdAt: string; // ISO 8601 날짜 문자열 (예: '2025-10-30T12:00:00Z')
 }
 

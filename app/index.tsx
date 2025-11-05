@@ -22,41 +22,47 @@ const sampleItems: Product[] = [
     exp_date: '2025-11-08',
     image: 'https://placehold.co/100x100',
     createdAt: '2025-10-28T10:00:00Z',
+    category: '냉장',
   },
   {
     id: '2',
     name: '유기농 식빵',
-    exp_date: '2025-10-31',
+    exp_date: '2025-11-04',
     image: 'https://placehold.co/100x100',
     createdAt: '2025-10-29T11:00:00Z',
+    category: '실온',
   },
   {
     id: '3',
     name: '신선한 계란 (10구)',
-    exp_date: '2025-11-03',
+    exp_date: '2025-11-30',
     image: 'https://placehold.co/100x100',
     createdAt: '2025-10-30T09:00:00Z',
+    category: '냉장',
   },
   {
     id: '4',
     name: '아보카도',
-    exp_date: '2025-10-30',
+    exp_date: '2025-11-20',
     image: 'https://placehold.co/100x100',
     createdAt: '2025-10-25T15:00:00Z',
+    category: '실온',
   },
   {
     id: '5',
     name: '오렌지',
-    exp_date: '2025-10-29',
+    exp_date: '2025-11-29',
     image: 'https://placehold.co/100x100',
     createdAt: '2025-10-22T10:00:00Z',
+    category: '냉장',
   },
   {
     id: '6',
     name: '돈까스',
-    exp_date: '2025-11-30',
+    exp_date: '2025-12-30',
     image: 'https://placehold.co/100x100',
     createdAt: '2025-09-28T10:00:00Z',
+    category: '냉동',
   },
 ];
 
@@ -69,10 +75,17 @@ export default function Home() {
   const [currentSortType, setCurrentSortType] = useState<SortType>('유통기한 임박순');
   const [sortModalVisible, setSortModalVisible] = useState(false);
 
+  const filteredItems = useMemo(() => {
+    if (currentCategory === '전체') return sampleItems;
+    return sampleItems.filter((item) => item.category === currentCategory);
+  }, [currentCategory]);
+
   const sortedItems = useMemo(() => {
-    const itemsCopy = [...sampleItems];
+    const itemsCopy = [...filteredItems];
     return sortProducts(itemsCopy, currentSortType);
-  }, [currentSortType]);
+  }, [currentSortType, filteredItems]);
+
+  const displayedItems = sortedItems;
 
   const handleSelectSort = (option: SortType) => {
     setCurrentSortType(option);
@@ -125,7 +138,7 @@ export default function Home() {
 
       {/* Count & Sort */}
       <View className="px-4 pt-6 pb-4 flex-row items-center justify-between">
-        <Text className="text-black-2 font-semibold">총 {sortedItems.length}개</Text>
+        <Text className="text-black-2 font-semibold">총 {displayedItems.length}개</Text>
         <TouchableOpacity
           className="flex-row items-center gap-1"
           onPress={() => setSortModalVisible(true)}
@@ -137,7 +150,7 @@ export default function Home() {
 
       {/* Product List */}
       <FlatList
-        data={sortedItems}
+        data={displayedItems}
         renderItem={({ item }) => {
           const daysLeft = calculateDaysLeft(item.exp_date);
 
@@ -215,15 +228,13 @@ export default function Home() {
         animationType="fade"
         transparent={true}
         visible={sortModalVisible}
-        onRequestClose={() => {
-          setSortModalVisible(!sortModalVisible);
-        }}
+        onRequestClose={() => setSortModalVisible(!sortModalVisible)}
       >
         <Pressable
           className="flex-1 items-center justify-center bg-black/50"
           onPress={() => setSortModalVisible(false)}
         >
-          <Pressable className="w-4/5 max-w-xs rounded-2xl bg-white shadow-lg" onPress={() => {}}>
+          <View className="w-4/5 max-w-xs rounded-2xl bg-white shadow-lg">
             <View className="p-2">
               {sortOptions.map((option) => (
                 <TouchableOpacity
@@ -249,7 +260,7 @@ export default function Home() {
                 <Text className="text-center text-lg text-status-danger">취소</Text>
               </TouchableOpacity>
             </View>
-          </Pressable>
+          </View>
         </Pressable>
       </Modal>
     </SafeAreaView>
