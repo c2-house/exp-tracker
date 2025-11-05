@@ -10,7 +10,7 @@ import { useMemo, useState } from 'react';
 import { FlatList, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function Home() {
+export default function HomeScreen() {
   const [currentCategory, setCurrentCategory] = useState(categories[0]);
   const [currentSortType, setCurrentSortType] = useState<SortType>(sortOptions[0]);
   const [sortModalVisible, setSortModalVisible] = useState(false);
@@ -128,18 +128,20 @@ export default function Home() {
       />
 
       {/* 상품 추가 버튼 (Floating Action Button) */}
-      <TouchableOpacity
-        className="absolute bottom-10 right-6 h-16 w-16 items-center justify-center rounded-full bg-primary-1 shadow-lg"
-        style={{
-          shadowColor: '#0061FF',
-          shadowOpacity: 0.3,
-          shadowRadius: 10,
-          shadowOffset: { width: 0, height: 4 },
-          elevation: 5,
-        }}
-      >
-        <Feather name="plus" size={32} color="white" />
-      </TouchableOpacity>
+      <Link href="/add-product" asChild>
+        <TouchableOpacity
+          className="absolute bottom-10 right-6 h-16 w-16 items-center justify-center rounded-full bg-primary-1 shadow-lg"
+          style={{
+            shadowColor: '#0061FF',
+            shadowOpacity: 0.3,
+            shadowRadius: 10,
+            shadowOffset: { width: 0, height: 4 },
+            elevation: 5,
+          }}
+        >
+          <Feather name="plus" size={32} color="white" />
+        </TouchableOpacity>
+      </Link>
 
       <SortModal
         visible={sortModalVisible}
