@@ -1,4 +1,5 @@
-import { SortType } from '@/lib/types';
+import { sortOptions } from '@/lib/constants';
+import type { SortType } from '@/lib/types';
 import { Modal, Pressable, Text, TouchableOpacity, View } from 'react-native';
 
 type SortModalProps = {
@@ -6,7 +7,6 @@ type SortModalProps = {
   onClose: () => void;
   onSelectSort: (option: SortType) => void;
   currentSortType: SortType;
-  sortOptions: SortType[];
 };
 
 export default function SortModal({
@@ -14,7 +14,6 @@ export default function SortModal({
   onClose,
   onSelectSort,
   currentSortType,
-  sortOptions,
 }: SortModalProps) {
   return (
     <Modal animationType="fade" transparent={true} visible={visible} onRequestClose={onClose}>

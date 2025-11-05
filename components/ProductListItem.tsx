@@ -1,4 +1,4 @@
-import { Product } from '@/lib/types';
+import type { Product } from '@/lib/types';
 import { calculateDaysLeft, getDdayString } from '@/lib/utils';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 

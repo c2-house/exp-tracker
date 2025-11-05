@@ -1,12 +1,12 @@
+import { categories } from '@/lib/constants';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 type CategoryFilterProps = {
-  categories: string[];
   currentCategory: string;
   onSelectCategory: (category: string) => void;
 };
 
-export default function CategoryFilter({ categories, currentCategory, onSelectCategory }: CategoryFilterProps) {
+export default function CategoryFilter({ currentCategory, onSelectCategory }: CategoryFilterProps) {
   return (
     <View className="pt-5">
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>

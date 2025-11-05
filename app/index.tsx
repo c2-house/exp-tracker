@@ -1,71 +1,17 @@
 import CategoryFilter from '@/components/CategoryFilter';
 import ProductListItem from '@/components/ProductListItem';
 import SortModal from '@/components/SortModal';
-import { Product, SortType } from '@/lib/types';
+import { categories, sampleItems, sortOptions } from '@/lib/constants';
+import type { SortType } from '@/lib/types';
 import { sortProducts } from '@/lib/utils';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { useMemo, useState } from 'react';
 import { FlatList, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const sampleItems: Product[] = [
-  {
-    id: '1',
-    name: '우유',
-    exp_date: '2025-11-08',
-    image: 'https://placehold.co/100x100',
-    createdAt: '2025-10-28T10:00:00Z',
-    category: '냉장',
-  },
-  {
-    id: '2',
-    name: '유기농 식빵',
-    exp_date: '2025-11-04',
-    image: 'https://placehold.co/100x100',
-    createdAt: '2025-10-29T11:00:00Z',
-    category: '실온',
-  },
-  {
-    id: '3',
-    name: '신선한 계란 (10구)',
-    exp_date: '2025-11-30',
-    image: 'https://placehold.co/100x100',
-    createdAt: '2025-10-30T09:00:00Z',
-    category: '냉장',
-  },
-  {
-    id: '4',
-    name: '아보카도',
-    exp_date: '2025-11-20',
-    image: 'https://placehold.co/100x100',
-    createdAt: '2025-10-25T15:00:00Z',
-    category: '실온',
-  },
-  {
-    id: '5',
-    name: '오렌지',
-    exp_date: '2025-11-29',
-    image: 'https://placehold.co/100x100',
-    createdAt: '2025-10-22T10:00:00Z',
-    category: '냉장',
-  },
-  {
-    id: '6',
-    name: '돈까스',
-    exp_date: '2025-12-30',
-    image: 'https://placehold.co/100x100',
-    createdAt: '2025-09-28T10:00:00Z',
-    category: '냉동',
-  },
-];
-
-const categories = ['전체', '냉장', '냉동', '실온', '화장품', '기타'];
-
-const sortOptions: SortType[] = ['유통기한 임박순', '최신 등록순', '이름순'];
-
 export default function Home() {
-  const [currentCategory, setCurrentCategory] = useState('전체');
-  const [currentSortType, setCurrentSortType] = useState<SortType>('유통기한 임박순');
+  const [currentCategory, setCurrentCategory] = useState(categories[0]);
+  const [currentSortType, setCurrentSortType] = useState<SortType>(sortOptions[0]);
   const [sortModalVisible, setSortModalVisible] = useState(false);
 
   const filteredItems = useMemo(() => {
@@ -102,11 +48,7 @@ export default function Home() {
         </View>
       </View>
 
-      <CategoryFilter
-        categories={categories}
-        currentCategory={currentCategory}
-        onSelectCategory={setCurrentCategory}
-      />
+      <CategoryFilter currentCategory={currentCategory} onSelectCategory={setCurrentCategory} />
 
       {/* Count & Sort */}
       <View className="px-4 pt-6 pb-4 flex-row items-center justify-between">
@@ -154,9 +96,8 @@ export default function Home() {
       <SortModal
         visible={sortModalVisible}
         onClose={() => setSortModalVisible(false)}
-        onSelectSort={handleSelectSort}
         currentSortType={currentSortType}
-        sortOptions={sortOptions}
+        onSelectSort={handleSelectSort}
       />
     </SafeAreaView>
   );
