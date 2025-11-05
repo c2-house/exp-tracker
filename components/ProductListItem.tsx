@@ -1,6 +1,6 @@
+import { Product } from '@/lib/types';
+import { calculateDaysLeft, getDdayString } from '@/lib/utils';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { Product } from '../app/types';
-import { calculateDaysLeft, getDdayString } from '../app/utils';
 
 export default function ProductListItem({ item }: { item: Product }) {
   const daysLeft = calculateDaysLeft(item.exp_date);

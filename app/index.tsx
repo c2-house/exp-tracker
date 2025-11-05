@@ -1,12 +1,12 @@
 import CategoryFilter from '@/components/CategoryFilter';
 import ProductListItem from '@/components/ProductListItem';
 import SortModal from '@/components/SortModal';
+import { Product, SortType } from '@/lib/types';
+import { sortProducts } from '@/lib/utils';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { useMemo, useState } from 'react';
 import { FlatList, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Product, SortType } from './types';
-import { sortProducts } from './utils';
 
 const sampleItems: Product[] = [
   {

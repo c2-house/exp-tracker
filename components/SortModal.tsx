@@ -1,5 +1,5 @@
+import { SortType } from '@/lib/types';
 import { Modal, Pressable, Text, TouchableOpacity, View } from 'react-native';
-import { SortType } from '../app/types';
 
 type SortModalProps = {
   visible: boolean;

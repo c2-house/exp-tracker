@@ -27,7 +27,7 @@
 - `04_TASKS.md` (필수) 개발을 위한 구체적인 작업 순서와 파일 경로가 정의된 체크리스트입니다. 현재 작업할 내용을 여기서 찾으세요.
 - `05_TECH_STACK.md` 사용할 라이브러리와 아키텍처 원칙이 요약되어 있습니다. 새 라이브러리 설치 전 이 문서를 확인하세요.
 
-## 4. 주요 기술 스택 및 규칙 (Tech Stack & Rules)
+## 4. 주요 기술 스택 (Tech Stack)
 
 - **Core:** React Native, Expo (Managed Workflow), TypeScript
 - **Routing:** Expo Router (파일 시스템 기반 라우팅, 예: `app/index.tsx`, `app/product/[id].tsx`)
@@ -42,7 +42,6 @@
   - `dayjs` (날짜 처리)
 - **Premium Backend:** Firebase (Authentication, Firestore) - 백업/복원 전용
 - **전역 상태 관리:** React Context API or Zustand
-- **커밋 메시지:** Conventional Commits 양식 준수 (예: `feat:`, `fix:`)
 
 ## 5. 주요 폴더 구조 (Folder Structure)
 
@@ -54,6 +53,13 @@
   - `product/[id].tsx`: 상품 상세 화면 (화면 5)
   - `notifications.tsx`: 알림 목록 화면 (화면 6)
   - `settings.tsx`: 설정 화면 (푸시 알림 설정, 로그인 & 백업, 구독 관리 등)
-- `app/types.ts`: 공용 타입 정의
-- `app/utils.ts`: 공용 함수 정의
 - `components/`: 재사용 가능한 공용 컴포넌트
+- `lib/types.ts`: 공용 타입 정의
+- `lib/utils.ts`: 공용 함수 정의
+
+## 6. 코딩 규칙 (Coding Rules)
+
+가독성 높고 유지보수하기 좋은 코드를 작성하기 위해 다음 규칙을 준수합니다.
+
+1.  **절대 경로 임포트 사용**: 상대 경로(`../`, `./`) 대신 절대 경로(`@/`)를 사용하여 모듈을 임포트합니다. 이는 코드의 가독성을 높이고 리팩토링 시 발생할 수 있는 오류를 줄여줍니다.
+2.  **타입스크립트 활용**: 타입스크립트의 강점을 최대한 활용하여 명확한 타입 정의와 안정적인 코드를 작성합니다.
