@@ -8,7 +8,7 @@ type CategoryFilterProps = {
 
 export default function CategoryFilter({ currentCategory, onSelectCategory }: CategoryFilterProps) {
   return (
-    <View className="pt-5">
+    <View className="">
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View className="flex-row gap-3 px-4">
           {categories.map((category) => (

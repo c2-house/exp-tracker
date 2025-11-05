@@ -6,16 +6,20 @@ import type { SortType } from '@/lib/types';
 import { sortProducts } from '@/lib/utils';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { useMemo, useState } from 'react';
-import { FlatList, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Home() {
   const [currentCategory, setCurrentCategory] = useState(categories[0]);
   const [currentSortType, setCurrentSortType] = useState<SortType>(sortOptions[0]);
   const [sortModalVisible, setSortModalVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchActive, setIsSearchActive] = useState(false);
 
   const filteredItems = useMemo(() => {
-    if (currentCategory === '전체') return sampleItems;
+    if (currentCategory === categories[0]) {
+      return sampleItems;
+    }
     return sampleItems.filter((item) => item.category === currentCategory);
   }, [currentCategory]);
 
@@ -24,11 +28,31 @@ export default function Home() {
     return sortProducts(itemsCopy, currentSortType);
   }, [currentSortType, filteredItems]);
 
-  const displayedItems = sortedItems;
+  const searchedItems = useMemo(() => {
+    if (!searchQuery) {
+      return sortedItems;
+    }
+    return sortedItems.filter((item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [sortedItems, searchQuery]);
+
+  const displayedItems = searchedItems;
 
   const handleSelectSort = (option: SortType) => {
     setCurrentSortType(option);
     setSortModalVisible(false);
+  };
+
+  const handleCancelSearch = () => {
+    setIsSearchActive(false);
+    setSearchQuery('');
+  };
+
+  const handleBlur = () => {
+    if (!searchQuery) {
+      setIsSearchActive(false);
+    }
   };
 
   return (
@@ -36,22 +60,43 @@ export default function Home() {
       <StatusBar barStyle="dark-content" />
 
       {/* Header */}
-      <View className="flex-row items-center justify-between px-4 pt-4">
-        <Text className="text-2xl font-bold text-black-1">Shelfie</Text>
-        <View className="flex-row items-center gap-4">
-          <TouchableOpacity>
-            <Feather name="search" size={24} color="#191D31" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Feather name="bell" size={24} color="#191D31" />
-          </TouchableOpacity>
-        </View>
+      <View className="flex-row items-center justify-between px-4 h-[60px]">
+        {isSearchActive ? (
+          <View className="flex-1 flex-row items-center bg-white rounded-lg px-3 border border-gray-100 focus-within:border-primary-1">
+            <Feather name="search" size={24} color="#666876" />
+            <TextInput
+              className="flex-1 mx-2 py-2.5 bg-white text-black-1 outline-none placeholder:text-black-3"
+              placeholder="상품 이름 검색"
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              onBlur={handleBlur}
+              autoFocus
+            />
+            <TouchableOpacity onPress={handleCancelSearch}>
+              <View className="size-5 items-center justify-center bg-black-3/40 rounded-full">
+                <Feather name="x" size={14} color="white" />
+              </View>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <>
+            <Text className="text-2xl font-bold text-black-1">Shelfie</Text>
+            <View className="flex-row items-center gap-1">
+              <TouchableOpacity className="p-1" onPress={() => setIsSearchActive(true)}>
+                <Feather name="search" size={24} color="#191D31" />
+              </TouchableOpacity>
+              <TouchableOpacity className="p-1" onPress={() => {}}>
+                <Feather name="bell" size={24} color="#191D31" />
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
 
       <CategoryFilter currentCategory={currentCategory} onSelectCategory={setCurrentCategory} />
 
       {/* Count & Sort */}
-      <View className="px-4 pt-6 pb-4 flex-row items-center justify-between">
+      <View className="px-4 pt-5 pb-4 flex-row items-center justify-between">
         <Text className="text-black-2 font-semibold">총 {displayedItems.length}개</Text>
         <TouchableOpacity
           className="flex-row items-center gap-1"
