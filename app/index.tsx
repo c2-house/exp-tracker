@@ -5,6 +5,7 @@ import { categories, sampleItems, sortOptions } from '@/lib/constants';
 import type { SortType } from '@/lib/types';
 import { sortProducts } from '@/lib/utils';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { Link } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -60,7 +61,7 @@ export default function Home() {
       <StatusBar barStyle="dark-content" />
 
       {/* Header */}
-      <View className="flex-row items-center justify-between px-4 h-[60px]">
+      <View className="flex-row items-center justify-between px-4 h-header">
         {isSearchActive ? (
           <View className="flex-1 flex-row items-center bg-white rounded-lg px-3 border border-gray-100 focus-within:border-primary-1">
             <Feather name="search" size={24} color="#666876" />
@@ -81,13 +82,15 @@ export default function Home() {
         ) : (
           <>
             <Text className="text-2xl font-bold text-black-1">Shelfie</Text>
-            <View className="flex-row items-center gap-1">
+            <View className="flex-row items-center gap-2">
               <TouchableOpacity className="p-1" onPress={() => setIsSearchActive(true)}>
                 <Feather name="search" size={24} color="#191D31" />
               </TouchableOpacity>
-              <TouchableOpacity className="p-1" onPress={() => {}}>
-                <Feather name="bell" size={24} color="#191D31" />
-              </TouchableOpacity>
+              <Link href="/notifications" asChild>
+                <TouchableOpacity className="p-1">
+                  <Feather name="bell" size={24} color="#191D31" />
+                </TouchableOpacity>
+              </Link>
             </View>
           </>
         )}
@@ -116,8 +119,8 @@ export default function Home() {
         className="flex-1 px-4"
         contentContainerStyle={{ gap: 12, paddingBottom: 100 }}
         ListEmptyComponent={
-          <View className="mt-20 items-center justify-center">
-            <Text className="mt-4 text-center text-lg text-black-3">
+          <View className="mt-24 items-center justify-center">
+            <Text className="text-center text-black-3">
               아직 등록된 상품이 없어요.{'\n'}아래 + 버튼을 눌러 첫 상품을 등록해보세요.
             </Text>
           </View>

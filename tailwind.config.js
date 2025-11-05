@@ -19,6 +19,9 @@ module.exports = {
           danger: '#FF3B30',
         },
       },
+      height: {
+        header: 60,
+      },
     },
   },
   plugins: [],
