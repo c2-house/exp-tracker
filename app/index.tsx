@@ -64,7 +64,7 @@ export default function HomeScreen() {
       <View className="flex-row items-center justify-between px-4 h-header">
         {isSearchActive ? (
           <View className="flex-1 flex-row items-center bg-white rounded-lg px-3 border border-gray-100 focus-within:border-primary-1">
-            <Feather name="search" size={24} color="var(--black-2)" />
+            <Feather name="search" size={24} color="#666876" />
             <TextInput
               className="flex-1 mx-2 py-2.5 bg-white text-black-1 outline-none placeholder:text-black-3"
               placeholder="상품 이름 검색"
@@ -84,11 +84,11 @@ export default function HomeScreen() {
             <Text className="text-2xl font-bold text-black-1">Shelfie</Text>
             <View className="flex-row items-center gap-2">
               <TouchableOpacity className="p-1" onPress={() => setIsSearchActive(true)}>
-                <Feather name="search" size={24} color="var(--black-1)" />
+                <Feather name="search" size={24} color="#191D31" />
               </TouchableOpacity>
               <Link href="/notifications" asChild>
                 <TouchableOpacity className="p-1">
-                  <Feather name="bell" size={24} color="var(--black-1)" />
+                  <Feather name="bell" size={24} color="#191D31" />
                 </TouchableOpacity>
               </Link>
             </View>
@@ -105,7 +105,7 @@ export default function HomeScreen() {
           className="flex-row items-center gap-1"
           onPress={() => setSortModalVisible(true)}
         >
-          <MaterialIcons name="sort" size={16} color="var(--black-2)" />
+          <MaterialIcons name="sort" size={16} color="#666876" />
           <Text className="text-sm font-medium text-black-2">{currentSortType}</Text>
         </TouchableOpacity>
       </View>
@@ -130,9 +130,9 @@ export default function HomeScreen() {
       {/* 상품 추가 버튼 (Floating Action Button) */}
       <Link href="/add-product" asChild>
         <TouchableOpacity
-          className="absolute bottom-10 right-6 h-16 w-16 items-center justify-center rounded-full bg-primary-1 shadow-lg"
+          className="absolute bottom-12 right-6 h-[64px] w-[64px] items-center justify-center rounded-full bg-primary-1 shadow-lg"
           style={{
-            shadowColor: 'var(--primary-1)',
+            shadowColor: '#0061FF',
             shadowOpacity: 0.3,
             shadowRadius: 10,
             shadowOffset: { width: 0, height: 4 },
