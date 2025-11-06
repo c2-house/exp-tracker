@@ -74,7 +74,7 @@ export default function HomeScreen() {
               autoFocus
             />
             <TouchableOpacity onPress={handleCancelSearch}>
-              <View className="size-5 items-center justify-center bg-black-3/40 rounded-full">
+              <View className="w-5 h-5 items-center justify-center bg-black-3/40 rounded-full">
                 <Feather name="x" size={14} color="white" />
               </View>
             </TouchableOpacity>
