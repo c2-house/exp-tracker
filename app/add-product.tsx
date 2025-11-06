@@ -1,6 +1,6 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Button, Text, TouchableOpacity, View } from 'react-native';
 
@@ -34,7 +34,6 @@ export default function AddProductScreen() {
 
   return (
     <View className="flex-1">
-      <Stack.Screen options={{ headerShown: false }} />
       <CameraView className="flex-1" />
 
       <View className="fixed inset-0 pt-5 pb-12 px-5 justify-between z-10 bg-black/50">
@@ -61,7 +60,7 @@ export default function AddProductScreen() {
             <Ionicons name="images-outline" size={24} color="white" />
           </TouchableOpacity>
           <TouchableOpacity className="w-[72px] h-[72px] justify-center items-center rounded-full bg-white border-4 border-primary-1">
-            <Feather name="camera" size={28} color="#0061FF" />
+            <Feather name="camera" size={28} color="var(--primary-1)" />
           </TouchableOpacity>
           <TouchableOpacity
             className="w-12 h-12 justify-center items-center bg-white/30 rounded-full"

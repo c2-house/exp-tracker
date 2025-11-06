@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --primary-1: theme('colors.primary.1');
+    --primary-2: theme('colors.primary.2');
+    --primary-3: theme('colors.primary.3');
+    --black-1: theme('colors.black-1');
+    --black-2: theme('colors.black-2');
+    --black-3: theme('colors.black-3');
+    --background: theme('colors.background');
+    --status-safe: theme('colors.status.safe');
+    --status-warning: theme('colors.status.warning');
+    --status-danger: theme('colors.status.danger');
+  }
+
+  body {
+    @apply bg-background text-black-1;
+  }
+}
