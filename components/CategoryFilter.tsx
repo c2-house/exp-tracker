@@ -1,5 +1,5 @@
 import { categories } from '@/lib/constants';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
 type CategoryFilterProps = {
   currentCategory: string;
@@ -12,7 +12,7 @@ export default function CategoryFilter({ currentCategory, onSelectCategory }: Ca
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View className="flex-row gap-3 px-4">
           {categories.map((category) => (
-            <TouchableOpacity
+            <Pressable
               key={category}
               onPress={() => onSelectCategory(category)}
               className={`py-2 px-5 rounded-full border ${
@@ -28,7 +28,7 @@ export default function CategoryFilter({ currentCategory, onSelectCategory }: Ca
               >
                 {category}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           ))}
         </View>
       </ScrollView>

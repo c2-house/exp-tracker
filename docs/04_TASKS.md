@@ -75,7 +75,7 @@
   - Expo Router의 동적 라우트 기능을 사용하여 상세 페이지를 생성합니다.
   - `useLocalSearchParams` 훅을 사용하여 id 값을 가져옵니다.
 - [ ] **메인 목록에서 상세 화면으로 이동**
-  - `app/index.tsx`의 FlatList renderItem에 있는 TouchableOpacity를 Link 컴포넌트로 변경하여, `href="/product/ITEM_ID"`로 연결합니다.
+  - `app/index.tsx`의 FlatList renderItem에 있는 Pressable을 Link 컴포넌트로 변경하여, `href="/product/ITEM_ID"`로 연결합니다.
 - [ ] **상세 화면 UI 구현**
   - `app/product/[id].tsx`에서 `sampleItems` 배열(추후 로컬 저장소)을 id로 검색하여 상품 정보를 찾습니다.
   - 와이어프레임(v1.3)의 화면 5 UI(정보 표시, 재고 상태 버튼 그룹, 개봉 여부 토글)를 구현합니다.
@@ -89,7 +89,7 @@
 
 - [ ] **목록 아이템 제스처 구현 (스와이프/길게 누르기)**
   - `react-native-gesture-handler`의 `Swipeable` 컴포넌트를 `FlatList`의 `renderItem`에 적용하여, 왼쪽 스와이프 시 [삭제] 버튼이 나오도록 구현합니다.
-  - `TouchableOpacity`를 `Pressable`로 변경하고 `onLongPress` 속성을 추가하여, 길게 누를 시 Context Menu(빠른 조작 메뉴)가 나타나도록 구현합니다. (PRD 2.2, 2.4 / Wireframe 1.3)
+  - `Pressable`에 `onLongPress` 속성을 추가하여, 길게 누를 시 Context Menu(빠른 조작 메뉴)가 나타나도록 구현합니다. (PRD 2.2, 2.4 / Wireframe 1.3)
 - [ ] **'삭제' 확인 모달 및 로직 구현**
   - '스와이프 > [삭제]' 또는 '길게 누르기 > [삭제]' 시, 와이어프레임에 명시된 "삭제 이유를 묻는 확인 팝업" (선택지: '유통기한 지나 폐기', '실수로 잘못 등록')을 구현합니다.
   - 선택에 따라 `sampleItems` 배열(추후 로컬 저장소)에서 해당 아이템을 제거하는 로직을 구현합니다.

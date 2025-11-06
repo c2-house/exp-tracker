@@ -3,7 +3,7 @@ import { CameraView, useCameraPermissions, type FlashMode } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Linking, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Linking, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function AddProductScreen() {
@@ -86,12 +86,12 @@ export default function AddProductScreen() {
         <Text className="text-center text-base text-black-2 mb-6">
           상품 등록을 위해{'\n'}설정에서 카메라 접근을 허용해주세요.
         </Text>
-        <TouchableOpacity
+        <Pressable
           className="bg-primary-1 px-5 py-3 rounded-lg"
           onPress={() => Linking.openSettings()}
         >
           <Text className="text-white font-semibold">설정 열기</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     );
   }
@@ -107,10 +107,10 @@ export default function AddProductScreen() {
       >
         <View className="flex-row justify-between items-center">
           <View className="w-8" />
-          <Text className="text-white text-lg font-semibold">상품 등록</Text>
-          <TouchableOpacity className="p-1" onPress={() => router.back()}>
+          <Text className="text-white text-lg font-bold">상품 등록</Text>
+          <Pressable className="p-1" onPress={() => router.back()}>
             <Feather name="x" size={24} color="white" />
-          </TouchableOpacity>
+          </Pressable>
         </View>
         <Text className="text-white text-base text-center mt-6">
           상품명과 유통기한을 순서대로 촬영해주세요.
@@ -122,19 +122,19 @@ export default function AddProductScreen() {
         className="absolute bottom-0 left-0 right-0 flex-row justify-between items-center px-10 pt-5 bg-black/50 z-10"
         style={{ paddingBottom: insets.bottom + 20 }}
       >
-        <TouchableOpacity
+        <Pressable
           className="w-12 h-12 justify-center items-center bg-white/30 rounded-full"
           onPress={handlePickImage}
         >
           <Ionicons name="images-outline" size={24} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </Pressable>
+        <Pressable
           className="w-[72px] h-[72px] justify-center items-center rounded-full bg-white border-[5px] border-primary-1"
           onPress={handleTakePicture}
         >
           <Feather name="camera" size={28} color="#0061FF" />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </Pressable>
+        <Pressable
           className="w-12 h-12 justify-center items-center bg-white/30 rounded-full"
           onPress={handleFlashModeChange}
         >
@@ -145,7 +145,7 @@ export default function AddProductScreen() {
             size={24}
             color={flashMode === 'on' ? '#FF9500' : 'white'}
           />
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );

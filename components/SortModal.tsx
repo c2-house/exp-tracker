@@ -1,6 +1,6 @@
 import { sortOptions } from '@/lib/constants';
 import type { SortType } from '@/lib/types';
-import { Modal, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, Pressable, Text, View } from 'react-native';
 
 type SortModalProps = {
   visible: boolean;
@@ -21,7 +21,7 @@ export default function SortModal({
         <View className="w-4/5 max-w-xs rounded-2xl bg-white shadow-lg">
           <View className="p-2">
             {sortOptions.map((option) => (
-              <TouchableOpacity
+              <Pressable
                 key={option}
                 className="rounded-lg p-4"
                 onPress={() => onSelectSort(option)}
@@ -33,13 +33,13 @@ export default function SortModal({
                 >
                   {option}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             ))}
           </View>
           <View className="border-t border-gray-200">
-            <TouchableOpacity className="rounded-lg p-4" onPress={onClose}>
+            <Pressable className="rounded-lg p-4" onPress={onClose}>
               <Text className="text-center text-lg text-status-danger">취소</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </Pressable>

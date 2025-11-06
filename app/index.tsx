@@ -7,7 +7,7 @@ import { sortProducts } from '@/lib/utils';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { FlatList, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Pressable, StatusBar, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
@@ -73,23 +73,23 @@ export default function HomeScreen() {
               onBlur={handleBlurSearch}
               autoFocus
             />
-            <TouchableOpacity onPress={handleCancelSearch}>
+            <Pressable onPress={handleCancelSearch}>
               <View className="w-5 h-5 items-center justify-center bg-black-3/40 rounded-full">
                 <Feather name="x" size={14} color="white" />
               </View>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         ) : (
           <>
             <Text className="text-2xl font-bold text-black-1">Shelfie</Text>
             <View className="flex-row items-center gap-2">
-              <TouchableOpacity className="p-1" onPress={() => setIsSearchActive(true)}>
+              <Pressable className="p-1" onPress={() => setIsSearchActive(true)}>
                 <Feather name="search" size={24} color="#191D31" />
-              </TouchableOpacity>
+              </Pressable>
               <Link href="/notifications" asChild>
-                <TouchableOpacity className="p-1">
+                <Pressable className="p-1">
                   <Feather name="bell" size={24} color="#191D31" />
-                </TouchableOpacity>
+                </Pressable>
               </Link>
             </View>
           </>
@@ -101,13 +101,13 @@ export default function HomeScreen() {
       {/* Count & Sort */}
       <View className="px-4 pt-5 pb-4 flex-row items-center justify-between">
         <Text className="text-black-2 font-semibold">총 {displayedItems.length}개</Text>
-        <TouchableOpacity
+        <Pressable
           className="flex-row items-center gap-1"
           onPress={() => setSortModalVisible(true)}
         >
           <MaterialIcons name="sort" size={16} color="#666876" />
           <Text className="text-sm font-medium text-black-2">{currentSortType}</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       {/* Product List */}
@@ -131,7 +131,7 @@ export default function HomeScreen() {
 
       {/* 상품 추가 버튼 (Floating Action Button) */}
       <Link href="/add-product" asChild>
-        <TouchableOpacity
+        <Pressable
           className="absolute bottom-12 right-6 h-[64px] w-[64px] items-center justify-center rounded-full bg-primary-1 shadow-lg"
           style={{
             shadowColor: '#0061FF',
@@ -142,7 +142,7 @@ export default function HomeScreen() {
           }}
         >
           <Feather name="plus" size={32} color="white" />
-        </TouchableOpacity>
+        </Pressable>
       </Link>
 
       <SortModal

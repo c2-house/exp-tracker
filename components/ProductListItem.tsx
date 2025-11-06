@@ -1,12 +1,12 @@
 import type { Product } from '@/lib/types';
 import { calculateDaysLeft, getDdayString } from '@/lib/utils';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 
 export default function ProductListItem({ item }: { item: Product }) {
   const daysLeft = calculateDaysLeft(item.exp_date);
 
   return (
-    <TouchableOpacity
+    <Pressable
       className="flex-row items-center rounded-2xl border border-gray-100 bg-white p-3 pr-4 shadow-sm"
       style={{
         shadowColor: '#000',
@@ -42,6 +42,6 @@ export default function ProductListItem({ item }: { item: Product }) {
           {getDdayString(daysLeft)}
         </Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
