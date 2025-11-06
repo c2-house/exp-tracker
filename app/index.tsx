@@ -120,8 +120,10 @@ export default function HomeScreen() {
         contentContainerStyle={{ gap: 12, paddingBottom: 100 }}
         ListEmptyComponent={
           <View className="mt-24 items-center justify-center">
-            <Text className="text-center text-black-3">
-              아직 등록된 상품이 없어요.{'\n'}아래 + 버튼을 눌러 첫 상품을 등록해보세요.
+            <Text className="text-center text-base text-black-3">
+              {searchQuery
+                ? '검색 결과가 없습니다.'
+                : '아직 등록된 상품이 없어요.\n아래 + 버튼을 눌러 첫 상품을 등록해보세요.'}
             </Text>
           </View>
         }

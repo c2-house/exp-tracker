@@ -14,17 +14,13 @@ export default function AddProductScreen() {
   const router = useRouter();
 
   useEffect(() => {
-    (async () => {
-      if (permission === null || !permission.granted) {
-        await requestPermission();
-      }
-    })();
+    if (!permission) requestPermission();
   }, [permission]);
 
   const handleTakePicture = async () => {
     if (!permission?.granted) {
       Alert.alert(
-        '카메라 접근 권한 요청',
+        '카메라 접근 권한 필요',
         '이 기능을 사용하려면 설정에서 카메라 접근을 허용해주세요.',
         [
           { text: '취소', style: 'destructive' },
@@ -47,7 +43,7 @@ export default function AddProductScreen() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert(
-        '사진 접근 권한 요청',
+        '사진 접근 권한 필요',
         '이 기능을 사용하려면 설정에서 사진(저장공간) 접근을 허용해주세요.',
         [
           { text: '취소', style: 'destructive' },
@@ -75,6 +71,31 @@ export default function AddProductScreen() {
     setFlashMode(flashModes[nextIndex]);
   };
 
+  if (!permission) {
+    // Camera permissions are still loading.
+    return <View />;
+  }
+
+  if (!permission.granted) {
+    // Camera permissions are not granted yet.
+    return (
+      <View className="flex-1 items-center justify-center bg-background p-5">
+        <Text className="text-center text-xl mb-4 font-bold text-black-1">
+          카메라 사용 권한이 필요해요.
+        </Text>
+        <Text className="text-center text-base text-black-2 mb-6">
+          상품 등록을 위해{'\n'}설정에서 카메라 접근을 허용해주세요.
+        </Text>
+        <TouchableOpacity
+          className="bg-primary-1 px-5 py-3 rounded-lg"
+          onPress={() => Linking.openSettings()}
+        >
+          <Text className="text-white font-semibold">설정 열기</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
     <View className="flex-1">
       <CameraView ref={cameraRef} flash={flashMode} className="flex-1" />
@@ -85,9 +106,9 @@ export default function AddProductScreen() {
         style={{ paddingTop: insets.top + 10 }}
       >
         <View className="flex-row justify-between items-center">
-          <View className="w-6" />
-          <Text className="text-white text-lg font-semibold">새 상품 등록</Text>
-          <TouchableOpacity onPress={() => router.back()}>
+          <View className="w-8" />
+          <Text className="text-white text-lg font-semibold">상품 등록</Text>
+          <TouchableOpacity className="p-1" onPress={() => router.back()}>
             <Feather name="x" size={24} color="white" />
           </TouchableOpacity>
         </View>

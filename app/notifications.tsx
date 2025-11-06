@@ -5,7 +5,7 @@ export default function NotificationsScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <View className="flex-1 items-center justify-center">
-        <Text className="text-center text-black-3">
+        <Text className="text-center text-base text-black-3">
           푸시 알림이 도착하면{'\n'}여기에서 확인할 수 있어요.
         </Text>
       </View>
