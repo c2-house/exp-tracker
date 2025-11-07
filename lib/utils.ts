@@ -17,7 +17,7 @@ export const sortProducts = (products: Product[], sortType: SortType) => {
   switch (sortType) {
     case '유통기한 임박순':
       return products.sort(
-        (a, b) => new Date(a.exp_date).getTime() - new Date(b.exp_date).getTime()
+        (a, b) => new Date(a.expiryDate).getTime() - new Date(b.expiryDate).getTime()
       );
     case '최신 등록순':
       return products.sort(

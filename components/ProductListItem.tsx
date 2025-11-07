@@ -3,7 +3,7 @@ import { calculateDaysLeft, getDdayString } from '@/lib/utils';
 import { Image, Pressable, Text, View } from 'react-native';
 
 export default function ProductListItem({ item }: { item: Product }) {
-  const daysLeft = calculateDaysLeft(item.exp_date);
+  const daysLeft = calculateDaysLeft(item.expiryDate);
 
   return (
     <Pressable
@@ -25,7 +25,7 @@ export default function ProductListItem({ item }: { item: Product }) {
         <Text className="text-lg font-semibold text-black-1" numberOfLines={1}>
           {item.name}
         </Text>
-        <Text className="text-sm text-black-2 mt-2">{item.exp_date.replace(/-/g, '.')} 까지</Text>
+        <Text className="text-sm text-black-2 mt-2">{item.expiryDate.replace(/-/g, '.')} 까지</Text>
       </View>
       {/* D-Day */}
       <View>
