@@ -3,10 +3,10 @@ import './global.css';
 
 export default function RootLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="add-product" options={{ headerShown: false }} />
-      <Stack.Screen name="notifications" options={{ title: '알림 목록' }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" />
+      <Stack.Screen name="add-product" />
+      <Stack.Screen name="notifications" />
     </Stack>
   );
 }

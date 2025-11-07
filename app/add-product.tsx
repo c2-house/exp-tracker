@@ -1,9 +1,18 @@
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions, type FlashMode } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Linking, Pressable, Text, View } from 'react-native';
+import {
+  Alert,
+  Button,
+  Linking,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function AddProductScreen() {
@@ -17,7 +26,30 @@ export default function AddProductScreen() {
     if (!permission) requestPermission();
   }, [permission]);
 
-  const handleTakePicture = async () => {
+  if (!permission) {
+    // Camera permissions are still loading.
+    return <View />;
+  }
+
+  if (!permission.granted) {
+    // Camera permissions are not granted yet.
+    return (
+      <View className="flex-1 items-center justify-center gap-4 bg-background p-5">
+        <Text className="text-center text-xl font-bold text-black-1">
+          카메라 사용 권한이 필요해요.
+        </Text>
+        <Text className="text-center text-base text-black-2 mb-2">
+          상품 등록을 위해 카메라 접근을 허용해주세요.
+        </Text>
+        <Pressable className="bg-primary-1 px-5 py-3 rounded-lg" onPress={requestPermission}>
+          <Text className="text-white font-semibold">카메라 사용하기</Text>
+        </Pressable>
+        <Button onPress={() => Linking.openSettings()} title="설정 열기" />
+      </View>
+    );
+  }
+
+  const takePicture = async () => {
     if (!permission?.granted) {
       Alert.alert(
         '카메라 접근 권한 필요',
@@ -34,12 +66,12 @@ export default function AddProductScreen() {
       const photo = await cameraRef.current.takePictureAsync({
         shutterSound: false,
       });
-      console.log('Photo taken:', photo);
+      console.log('Photo taken:', photo.uri);
       // TODO: Navigate to confirm screen with photo uri
     }
   };
 
-  const handlePickImage = async () => {
+  const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert(
@@ -64,45 +96,17 @@ export default function AddProductScreen() {
     }
   };
 
-  const handleFlashModeChange = () => {
-    const flashModes: FlashMode[] = ['auto', 'on', 'off'];
-    const currentIndex = flashModes.indexOf(flashMode);
-    const nextIndex = (currentIndex + 1) % flashModes.length;
-    setFlashMode(flashModes[nextIndex]);
+  const changeFlashMode = () => {
+    setFlashMode((prev) => (prev === 'auto' ? 'on' : prev === 'on' ? 'off' : 'auto'));
   };
-
-  if (!permission) {
-    // Camera permissions are still loading.
-    return <View />;
-  }
-
-  if (!permission.granted) {
-    // Camera permissions are not granted yet.
-    return (
-      <View className="flex-1 items-center justify-center bg-background p-5">
-        <Text className="text-center text-xl mb-4 font-bold text-black-1">
-          카메라 사용 권한이 필요해요.
-        </Text>
-        <Text className="text-center text-base text-black-2 mb-6">
-          상품 등록을 위해{'\n'}설정에서 카메라 접근을 허용해주세요.
-        </Text>
-        <Pressable
-          className="bg-primary-1 px-5 py-3 rounded-lg"
-          onPress={() => Linking.openSettings()}
-        >
-          <Text className="text-white font-semibold">설정 열기</Text>
-        </Pressable>
-      </View>
-    );
-  }
 
   return (
     <View className="flex-1">
-      <CameraView ref={cameraRef} flash={flashMode} className="flex-1" />
+      <CameraView ref={cameraRef} flash={flashMode} style={styles.camera} />
 
       {/* Header */}
       <View
-        className="absolute top-0 left-0 right-0 p-5 bg-black/50 z-10"
+        className="absolute top-0 left-0 right-0 p-5 bg-black/50"
         style={{ paddingTop: insets.top + 10 }}
       >
         <View className="flex-row justify-between items-center">
@@ -112,31 +116,36 @@ export default function AddProductScreen() {
             <Feather name="x" size={24} color="white" />
           </Pressable>
         </View>
-        <Text className="text-white text-base text-center mt-6">
-          상품명과 유통기한을 순서대로 촬영해주세요.
+        <Text className="text-white text-base text-center mt-5">
+          상품명이 잘 보이게 촬영해주세요.
         </Text>
       </View>
 
       {/* Footer */}
       <View
-        className="absolute bottom-0 left-0 right-0 flex-row justify-between items-center px-10 pt-5 bg-black/50 z-10"
+        className="absolute bottom-0 left-0 right-0 flex-row justify-between items-center px-10 pt-6 bg-black/50"
         style={{ paddingBottom: insets.bottom + 20 }}
       >
-        <Pressable
-          className="w-12 h-12 justify-center items-center bg-white/30 rounded-full"
-          onPress={handlePickImage}
+        <TouchableOpacity
+          className="w-14 h-14 justify-center items-center bg-white/30 rounded-full"
+          onPress={pickImage}
         >
-          <Ionicons name="images-outline" size={24} color="white" />
+          <AntDesign name="picture" size={24} color="white" />
+        </TouchableOpacity>
+        <Pressable onPress={takePicture}>
+          {({ pressed }) => (
+            <View
+              className={`w-[85px] h-[85px] justify-center items-center rounded-full bg-transparent border-[5px] border-white ${
+                pressed ? 'opacity-50' : 'opacity-100'
+              }`}
+            >
+              <View className="w-[70px] h-[70px] justify-center items-center rounded-full bg-white" />
+            </View>
+          )}
         </Pressable>
         <Pressable
-          className="w-[72px] h-[72px] justify-center items-center rounded-full bg-white border-[5px] border-primary-1"
-          onPress={handleTakePicture}
-        >
-          <Feather name="camera" size={28} color="#0061FF" />
-        </Pressable>
-        <Pressable
-          className="w-12 h-12 justify-center items-center bg-white/30 rounded-full"
-          onPress={handleFlashModeChange}
+          className="w-14 h-14 justify-center items-center bg-white/30 rounded-full"
+          onPress={changeFlashMode}
         >
           <Ionicons
             name={
@@ -150,3 +159,7 @@ export default function AddProductScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  camera: StyleSheet.absoluteFillObject,
+});
