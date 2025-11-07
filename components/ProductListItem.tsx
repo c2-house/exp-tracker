@@ -17,9 +17,8 @@ export default function ProductListItem({ item }: { item: Product }) {
       }}
     >
       <Image
-        source={{ uri: item.image }}
-        className="h-20 w-20 rounded-lg bg-gray-100"
-        resizeMode="cover"
+        source={item.image ? { uri: item.image } : require('../assets/images/placeholder.png')}
+        className="h-20 w-20 rounded-lg"
       />
       {/* 상품명, 유통기한 */}
       <View className="mx-4 flex-1">

@@ -4,10 +4,10 @@ import SortModal from '@/components/SortModal';
 import { categories, sampleItems, sortOptions } from '@/lib/constants';
 import type { SortType } from '@/lib/types';
 import { sortProducts } from '@/lib/utils';
-import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { FlatList, Pressable, StatusBar, Text, TextInput, View } from 'react-native';
+import { FlatList, Image, Pressable, StatusBar, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
@@ -105,7 +105,7 @@ export default function HomeScreen() {
           className="flex-row items-center gap-1"
           onPress={() => setSortModalVisible(true)}
         >
-          <MaterialIcons name="sort" size={16} color="#666876" />
+          <Image source={require('../assets/icons/arrow-up-down.png')} className="w-4 h-4" />
           <Text className="text-sm font-medium text-black-2">{currentSortType}</Text>
         </Pressable>
       </View>
