@@ -1,9 +1,11 @@
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
+import TextRecognition, { TextRecognitionScript } from '@react-native-ml-kit/text-recognition';
 import { CameraView, useCameraPermissions, type FlashMode } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Button,
   Linking,
@@ -18,6 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default function AddProductScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [flashMode, setFlashMode] = useState<FlashMode>('auto');
+  const [isProcessing, setIsProcessing] = useState(false);
   const cameraRef = useRef<CameraView>(null);
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -49,6 +52,25 @@ export default function AddProductScreen() {
     );
   }
 
+  const processImage = async (uri: string) => {
+    setIsProcessing(true);
+    try {
+      const result = await TextRecognition.recognize(uri, TextRecognitionScript.KOREAN);
+      const recognizedText = result.text;
+      console.log('Recognized text:', recognizedText);
+
+      // router.push({
+      //   pathname: '/confirm-product',
+      //   params: { imageUri: uri, recognizedText },
+      // });
+    } catch (e) {
+      console.error(e);
+      Alert.alert('오류', '텍스트를 인식하는 데 실패했습니다. 다시 시도해 주세요.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const takePicture = async () => {
     if (!permission?.granted) {
       Alert.alert(
@@ -66,8 +88,10 @@ export default function AddProductScreen() {
       const photo = await cameraRef.current.takePictureAsync({
         shutterSound: false,
       });
-      console.log('Photo taken:', photo.uri);
-      // TODO: Navigate to confirm screen with photo uri
+      if (photo?.uri) {
+        console.log('Photo taken:', photo.uri);
+        await processImage(photo.uri);
+      }
     }
   };
 
@@ -90,9 +114,9 @@ export default function AddProductScreen() {
       quality: 1,
     });
 
-    if (!result.canceled) {
+    if (!result.canceled && result.assets[0].uri) {
       console.log('Image picked:', result.assets[0].uri);
-      // TODO: Navigate to confirm screen with image uri
+      await processImage(result.assets[0].uri);
     }
   };
 
@@ -129,14 +153,15 @@ export default function AddProductScreen() {
         <TouchableOpacity
           className="w-14 h-14 justify-center items-center bg-white/30 rounded-full"
           onPress={pickImage}
+          disabled={isProcessing}
         >
           <AntDesign name="picture" size={24} color="white" />
         </TouchableOpacity>
-        <Pressable onPress={takePicture}>
+        <Pressable onPress={takePicture} disabled={isProcessing}>
           {({ pressed }) => (
             <View
               className={`w-[85px] h-[85px] justify-center items-center rounded-full bg-transparent border-[5px] border-white ${
-                pressed ? 'opacity-50' : 'opacity-100'
+                pressed || isProcessing ? 'opacity-50' : 'opacity-100'
               }`}
             >
               <View className="w-[70px] h-[70px] justify-center items-center rounded-full bg-white" />
@@ -146,6 +171,7 @@ export default function AddProductScreen() {
         <Pressable
           className="w-14 h-14 justify-center items-center bg-white/30 rounded-full"
           onPress={changeFlashMode}
+          disabled={isProcessing}
         >
           <Ionicons
             name={
@@ -156,6 +182,16 @@ export default function AddProductScreen() {
           />
         </Pressable>
       </View>
+
+      {isProcessing && (
+        <View
+          className="absolute inset-0 justify-center items-center"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
+        >
+          <ActivityIndicator size="large" color="#fff" />
+          <Text className="text-white text-lg mt-4">사진을 분석하고 있어요...</Text>
+        </View>
+      )}
     </View>
   );
 }
