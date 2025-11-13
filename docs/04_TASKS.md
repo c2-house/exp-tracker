@@ -16,8 +16,6 @@
 
 ## 2단계: 메인 화면 (화면 1: Main List Screen)
 
-`app/index.tsx` 파일의 기능을 완성합니다.
-
 - [x] **기본 UI 구현**
   - `SafeAreaView` 및 `StatusBar` 설정
   - 헤더: 'Shelfie' 로고, 검색 아이콘, 알림 아이콘
@@ -39,8 +37,6 @@
 
 ## 3단계: 상품 등록 흐름 (Flow 1: Add Product)
 
-핵심 기능인 OCR 등록 흐름을 구현합니다. (Wireframe 화면 2, 3, 4)
-
 - [x] **화면 이동 설정 (Expo Router)**
   - `app/index.tsx`의 플로팅 액션 버튼(FAB)에 Link 컴포넌트를 적용하여, 새 상품 등록 화면(`app/add-product.tsx`)으로 이동하도록 설정합니다.
 - [x] **카메라 화면 UI 구현**
@@ -50,25 +46,30 @@
   - 촬영 버튼을 누르면 사진 촬영
   - 갤러리 버튼을 누르면 갤러리에서 사진 선택
   - 플래시 버튼을 누르면 플래시 켜기/끄기
-- [ ] **OCR 기능 구현 (핵심)**
+- [x] **OCR 기능 구현 (핵심)**
   - `react-native-mlkit` 라이브러리를 설치하고 설정합니다.
   - 촬영 버튼을 눌렀을 때 사진을 찍고, (원본 이미지를 바탕으로) ML Kit의 `recognizeText` 함수로 텍스트를 추출하는 로직을 구현합니다.
-  - **로딩 인디케이터 구현 (화면 2.5)**: 텍스트 추출 중임을 알리는 로딩 스크린을 표시합니다.
-- [ ] **새 화면 생성: `app/confirm-product.tsx` (화면 3: 결과 확인)**
-  - `app/add-product.tsx`에서 OCR 결과(상품명, 유통기한) 및 **원본 이미지 URI**를 `expo-router`의 `params`로 넘겨받아 화면 3: OCR 결과 확인 및 수정 화면을 구현합니다.
-  - 이미지, 상품명, 유통기한, 카테고리 선택 등이 있는 Form UI를 구현합니다.
-- [ ] **2단계 촬영 로직 구현**
-  - 화면 3의 유통기한 필드 옆에 '유통기한 촬영' 버튼이 있고, 이 버튼을 누르면 다시 `app/add-product.tsx` 화면으로 이동하도록 구현합니다.
-- [ ] **이미지 압축, 데이터 저장 로직 구현**
-  - `expo-image-manipulator` 라이브러리를 설치합니다.
-  - 화면 3에서 '저장' 버튼을 누르면, 이 시점에서 `expo-image-manipulator`를 사용해 원본 이미지를 가로 300px 정도로 리사이징 및 압축합니다.
-  - 새로운 상품 객체(압축된 이미지 URI 포함)를 생성하여 `sampleItems` 배열(추후 로컬 저장소)에 추가하고, 메인 화면(`app/index.tsx`)으로 복귀하도록 구현합니다.
+- [ ] **유통기한 OCR 기능 구현 (핵심)**
+  - 이미지에서 텍스트를 추출하는 기능은 이미 구현되어 있습니다.
+  - `dayjs` 등을 활용해 다양한 날짜 형식(예: ~까지, YYYY년 MM월 DD일, YYYY.MM.DD, YY.MM.DD, MM/DD/YY, DD/MM/YY 등)을 파싱하는 로직을 추가합니다.
+- [ ] **라우팅 로직 수정**
+  - 기존 `app/add-product.tsx` 로직을 `app/scan-expiry.tsx` (화면 2.5: 유통기한 스캐너)로 이동합니다.
+  - 기존 `app/confirm-product.tsx` 로직을 `app/add-product.tsx` (화면 2: 상품 등록 폼)로 이동하고, `app/confirm-product.tsx` 파일을 삭제합니다.
+- [ ] **`app/add-product.tsx` 화면 구현 (화면 2: 상품 등록 폼)**
+  - `TextInput`(상품명), 유통기한 입력 UI, 카테고리 선택 UI가 포함된 폼(Form) UI로 재구현합니다.
+  - 폼의 유통기한 필드 옆에 '카메라' 아이콘을 누르면 `app/scan-expiry.tsx` 화면으로 이동하도록 구현합니다.
+- [ ] **OCR 결과 전달 및 자동 채우기**
+  - OCR 및 날짜 파싱이 완료되면, `expo-router`의 `router.back()`을 호출하여 `app/add-product.tsx`로 복귀합니다.
+  - 이때 `params`를 통해 스캔된 날짜 문자열을 전달하고, `params`를 감지하여 유통기한 폼 상태(state)를 자동으로 업데이트합니다.
+- [ ] **저장 로직 구현**
+  - `app/add-product.tsx`(폼 화면)에서 '저장' 버튼을 누르면, 폼의 모든 데이터를 취합하여 `sampleItems` 배열(추후 로컬 저장소)에 추가하고, 메인 화면(`app/index.tsx`)으로 복귀합니다.
+  - 데이터가 정상적으로 저장되면 메인 화면 하단에 토스트 팝업을 표시합니다.
 
-## 4단계: 상품 수정/삭제 흐름 (Flow 2: Product Detail)
+## 4단계: 상품 수정/삭제 흐름
 
 상품 상세 화면 및 메인 화면에서 상품 정보를 수정/삭제하는 흐름을 구현합니다.
 
-### 상품 상세 화면 (Wireframe 화면 5)
+### 상품 상세 화면 (Flow 2: Product Detail / Wireframe 화면 5)
 
 - [ ] **동적 라우트 생성: `app/product/[id].tsx` (화면 5: 상세)**
   - Expo Router의 동적 라우트 기능을 사용하여 상세 페이지를 생성합니다.
@@ -84,11 +85,11 @@
 - [ ] **상세 화면 '삭제' 로직 구현**
   - 헤더의 휴지통 아이콘 클릭 시 '삭제 이유' 팝업 표시 및 삭제 로직을 구현합니다.
 
-### 메인 화면
+### 메인 화면 (PRD 2.2 / Wireframe 화면 1.3)
 
 - [ ] **목록 아이템 제스처 구현 (스와이프/길게 누르기)**
   - `react-native-gesture-handler`의 `Swipeable` 컴포넌트를 `FlatList`의 `renderItem`에 적용하여, 왼쪽 스와이프 시 [삭제] 버튼이 나오도록 구현합니다.
-  - `Pressable`에 `onLongPress` 속성을 추가하여, 길게 누를 시 Context Menu(빠른 조작 메뉴)가 나타나도록 구현합니다. (PRD 2.2, 2.4 / Wireframe 1.3)
+  - `Pressable`에 `onLongPress` 속성을 추가하여, 길게 누를 시 Context Menu(빠른 조작 메뉴)가 나타나도록 구현합니다.
 - [ ] **'삭제' 확인 모달 및 로직 구현**
   - '스와이프 > [삭제]' 또는 '길게 누르기 > [삭제]' 시, 와이어프레임에 명시된 "삭제 이유를 묻는 확인 팝업" (선택지: '유통기한 지나 폐기', '실수로 잘못 등록')을 구현합니다.
   - 선택에 따라 `sampleItems` 배열(추후 로컬 저장소)에서 해당 아이템을 제거하는 로직을 구현합니다.
