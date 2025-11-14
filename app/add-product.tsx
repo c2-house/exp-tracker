@@ -1,3 +1,4 @@
+import { extractExpiryDate } from '@/lib/utils';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import TextRecognition, { TextRecognitionScript } from '@react-native-ml-kit/text-recognition';
 import { CameraView, useCameraPermissions, type FlashMode } from 'expo-camera';
@@ -56,8 +57,8 @@ export default function AddProductScreen() {
     setIsProcessing(true);
     try {
       const result = await TextRecognition.recognize(uri, TextRecognitionScript.KOREAN);
-      const recognizedText = result.text;
-      console.log('Recognized text:', recognizedText);
+      const expiryDate = extractExpiryDate(result.text);
+      console.log('🚀 ~ add-product.tsx:61 ~ expiryDate:', expiryDate);
 
       // router.push({
       //   pathname: '/confirm-product',

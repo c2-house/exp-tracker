@@ -1,6 +1,9 @@
 import dayjs from 'dayjs';
 import type { Product, SortType } from './types';
 
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+
 export const calculateDaysLeft = (expDate: string) => {
   const today = dayjs().startOf('day');
   const expiry = dayjs(expDate);
@@ -27,5 +30,83 @@ export const sortProducts = (products: Product[], sortType: SortType) => {
       return products.sort((a, b) => a.name.localeCompare(b.name));
     default:
       return products;
+  }
+};
+
+/**
+ * OCR 텍스트에서 유통기한 날짜를 추출하고 'YYYY-MM-DD' 형식으로 반환합니다.
+ * 다양한 날짜 형식을 파싱하며, 현재 날짜와 비교하여 가장 적절한 날짜를 찾습니다.
+ * @param text OCR로 인식된 전체 텍스트
+ * @returns 'YYYY-MM-DD' 형식의 유통기한 날짜 문자열 또는 찾지 못한 경우 null
+ */
+export const extractExpiryDate = (text: string): string | null => {
+  const today = dayjs().startOf('day');
+  const currentYear = today.year();
+
+  const cleanedText = text
+    .replace(/[,\/\-]/g, '.') // 특수문자 ',' '-' '/'를 '.'으로 변경
+    .replace(/\s*[년월]\s*/g, '.') // '년', '월' 및 주변 공백을 '.'으로 변경
+    .replace(/(?<=(^|[^A-Za-z\d])\d{2,4})\s+(?=\d)/g, '.') // 2-4자리 숫자 사이의 공백을 '.'으로 변경
+    .replace(/\s*\.\s*/g, '.') // '.' 주변의 공백 제거
+    .replace(/[^A-Za-z\d.]/g, ' '); // 숫자와 알파벳 이외의 문자는 공백으로 변경
+  console.log('🚀 ~ utils.ts:52 ~ cleanedText:', cleanedText);
+
+  // 다양한 날짜 형식을 찾기 위한 정규식
+  const dateRegexPatterns = [
+    /\d{4}\.\d{1,2}\.\d{1,2}/, // YYYY.MM.DD
+    /\d{2}\.\d{1,2}\.\d{1,2}/, // YY.MM.DD
+    /\d{1,2}\.\d{1,2}/, // MM.DD
+    /\d{8}/, // YYYYMMDD
+  ];
+
+  const parsingFormats = ['YYYY.MM.DD', 'YY.MM.DD', 'MM.DD', 'YYYYMMDD'];
+
+  const foundDates: dayjs.Dayjs[] = [];
+
+  dateRegexPatterns.forEach((pattern) => {
+    const regex = new RegExp(pattern.source, 'g');
+    const matches = cleanedText.match(regex);
+    console.log('🚀 ~ utils.ts:69 ~ matches:', matches);
+
+    if (matches) {
+      matches.forEach((match) => {
+        for (const format of parsingFormats) {
+          let parsedDate = dayjs(match, format, true); // strict 모드로 파싱
+
+          if (parsedDate.isValid()) {
+            // MM.DD 포맷 처리: 연도가 없으면 현재 연도 또는 다음 연도 부여
+            if (format.startsWith('M')) {
+              const dateWithCurrentYear = parsedDate.year(currentYear);
+              // 현재 12월이고 MM이 1월이면 다음 해로 설정
+              if (today.month() === 11 && parsedDate.month() === 0) {
+                parsedDate = dateWithCurrentYear.add(1, 'year');
+              } else {
+                parsedDate = dateWithCurrentYear;
+              }
+            }
+
+            // 너무 먼 과거(5년 전)나 너무 먼 미래(10년 후)의 날짜는 제외
+            if (
+              parsedDate.isAfter(today.subtract(5, 'year')) &&
+              parsedDate.isBefore(today.add(10, 'year'))
+            ) {
+              foundDates.push(parsedDate);
+            }
+            break; // 첫 번째 유효한 포맷을 찾으면 중단
+          }
+        }
+      });
+    }
+  });
+
+  console.log('🚀 ~ utils.ts:102 ~ foundDates:', foundDates);
+  if (foundDates.length === 0) {
+    return null;
+  } else {
+    // 날짜가 여러 개이면 가장 나중 날짜를 반환
+    if (foundDates.length > 1) {
+      foundDates.sort((a, b) => b.valueOf() - a.valueOf());
+    }
+    return foundDates[0].format('YYYY-MM-DD');
   }
 };
