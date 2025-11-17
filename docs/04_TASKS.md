@@ -53,12 +53,12 @@
   - `dayjs` 등을 활용해 다양한 날짜 형식(예: ~까지, YYYY년 MM월 DD일, YYYY.MM.DD, YY.MM.DD, MM/DD/YY, DD/MM/YY 등)을 찾는 정규식 로직을 구현합니다.
 - [ ] **`app/scan-product.tsx` 수정 (화면 2: 유통기한 스캐너)**
   - 기존에 구현된 화면 하단에 '직접 입력(건너뛰기)' 버튼을 배치합니다.
-- [ ] **`app/product-form.tsx` 구현 (화면 3: 등록 폼)**
+- [ ] **`app/add-product.tsx` 구현 (화면 3: 등록 폼)**
   - 상품명, 카테고리, 유통기한을 입력받는 폼 UI를 구현합니다.
 - [ ] **화면 전환 및 데이터 전달**
-  - OCR 성공 시: `router.replace('/product-form', { scannedExpiryDate: '...' })`를 사용하여 스캐너를 스택에서 지우고 폼으로 이동합니다.
+  - OCR 성공 시: `router.replace('/add-product', { scannedExpiryDate: '...' })`를 사용하여 스캐너를 스택에서 지우고 폼으로 이동합니다.
   - OCR 실패 시: 화면 이동을 막고, Toast 컴포넌트를 사용해 실패 메시지를 띄우는 로직을 추가합니다.
-  - 건너뛰기 시: `router.replace('/product-form')`으로 빈 폼으로 이동합니다.
+  - 건너뛰기 시: `router.replace('/add-product')`으로 빈 폼으로 이동합니다.
 - [ ] **데이터 수신 및 자동 채우기**
   - `useLocalSearchParams`를 통해 이전 화면에서 넘겨준 `scannedExpiryDate`(string)를 받습니다.
   - `scannedExpiryDate`가 있으면:

@@ -22,7 +22,7 @@ const CATEGORIES = [
   { id: 'etc', name: '기타' },
 ];
 
-export default function ConfirmProductScreen() {
+export default function AddProductScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ imageUri: string; recognizedText: string }>();
@@ -97,10 +97,11 @@ export default function ConfirmProductScreen() {
                 <TouchableOpacity
                   key={category.id}
                   onPress={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-full border ${selectedCategory === category.id
+                  className={`px-4 py-2 rounded-full border ${
+                    selectedCategory === category.id
                       ? 'bg-primary-1 border-primary-1'
                       : 'border-gray-300'
-                    }`}
+                  }`}
                 >
                   <Text
                     className={`${selectedCategory === category.id ? 'text-white' : 'text-black'}`}
@@ -115,10 +116,7 @@ export default function ConfirmProductScreen() {
       </ScrollView>
 
       {/* Footer Buttons */}
-      <View
-        className="flex-row px-5 pb-4 gap-x-3"
-        style={{ paddingBottom: insets.bottom || 20 }}
-      >
+      <View className="flex-row px-5 pb-4 gap-x-3" style={{ paddingBottom: insets.bottom || 20 }}>
         <Pressable
           onPress={() => router.back()}
           className="flex-1 bg-gray-200 rounded-lg items-center py-4"
