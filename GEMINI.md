@@ -38,10 +38,10 @@
 - `app/`: Expo Router의 라우트 스크린이 위치합니다.
   - `_layout.tsx`: 전역 레이아웃
   - `index.tsx`: 메인 목록 화면 (화면 1)
-  - `add-product.tsx`: 상품 등록 화면 (화면 2)
-  - `scan-expiry.tsx`: 유통기한 OCR 화면 (화면 2.5)
-  - `product/[id].tsx`: 상품 상세 화면 (화면 4)
-  - `notifications.tsx`: 알림 목록 화면 (화면 5)
+  - `add-product.tsx`: 유통기한 OCR 스캐너 (화면 2)
+  - `product-form.tsx`: 상품 등록 화면 (화면 3)
+  - `product/[id].tsx`: 상품 상세 화면 (화면 5)
+  - `notifications.tsx`: 알림 목록 화면 (화면 6)
   - `settings.tsx`: 설정 화면 (푸시 알림 설정, 로그인 & 백업, 구독 관리 등)
 - `components/`: 재사용 가능한 공용 컴포넌트
 - `lib/`: 컴포넌트나 스크린이 아닌 공용 코드가 위치합니다.

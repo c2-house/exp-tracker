@@ -27,10 +27,10 @@
 
 ## 5. 핵심 기능 라이브러리 (Core Feature Libraries)
 
-- **OCR (광학 문자 인식):** `react-native-mlkit` (Text Recognition 모듈)
-  - **목적:** 촬영된 이미지에서 유통기한 텍스트 추출 (Task 3. OCR 기능 구현)
 - **Camera:** `expo-camera`
-  - **목적:** '화면 2.5: 유통기한 OCR 스캐너' 구현 및 사용자 권한 요청 (Task 3. 카메라 기능 구현)
+  - **목적:** 유통기한 스캔 화면 구현 (Task 3. 카메라 기능 구현)
+- **OCR (광학 문자 인식):** `react-native-mlkit` (Text Recognition 모듈)
+  - **목적:** 촬영된 이미지에서 유통기한 날짜 추출 (Task 3. OCR 기능 구현)
 - **Push Notifications:** `expo-notifications`
   - **목적:** 푸시 알림 권한 획득, 로컬 알림 스케줄링(D-Day 알림), 알림 탭 핸들링 (Task 6. 푸시 알림)
 
