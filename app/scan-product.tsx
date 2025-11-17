@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function AddProductScreen() {
+export default function ScanProductScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [flashMode, setFlashMode] = useState<FlashMode>('auto');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -58,7 +58,7 @@ export default function AddProductScreen() {
     try {
       const result = await TextRecognition.recognize(uri, TextRecognitionScript.KOREAN);
       const expiryDate = extractExpiryDate(result.text);
-      console.log('🚀 ~ add-product.tsx:61 ~ expiryDate:', expiryDate);
+      console.log('🚀 ~ scan-product.tsx:61 ~ expiryDate:', expiryDate);
 
       // router.push({
       //   pathname: '/confirm-product',

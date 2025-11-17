@@ -130,7 +130,7 @@ export default function HomeScreen() {
       />
 
       {/* 상품 추가 버튼 (Floating Action Button) */}
-      <Link href="/add-product" asChild>
+      <Link href="/scan-product" asChild>
         <Pressable
           className="absolute bottom-12 right-6 h-[64px] w-[64px] items-center justify-center rounded-full bg-primary-1 shadow-lg"
           style={{

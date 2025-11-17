@@ -38,9 +38,9 @@
 ## 3단계: 상품 등록 흐름 (Flow 1: Add Product)
 
 - [x] **화면 이동 설정 (Expo Router)**
-  - `app/index.tsx`의 플로팅 액션 버튼(FAB)에 Link 컴포넌트를 적용하여, 새 상품 등록 화면(`app/add-product.tsx`)으로 이동하도록 설정합니다.
+  - `app/index.tsx`의 플로팅 액션 버튼(FAB)에 Link 컴포넌트를 적용하여, 새 상품 등록 화면(`app/scan-product.tsx`)으로 이동하도록 설정합니다.
 - [x] **카메라 화면 UI 구현**
-  - `expo-camera` 라이브러리를 설치하고, `app/add-product.tsx`에서 사용자 권한을 요청하고 카메라 뷰가 나오도록 구현합니다.
+  - `expo-camera` 라이브러리를 설치하고, `app/scan-product.tsx`에서 사용자 권한을 요청하고 카메라 뷰가 나오도록 구현합니다.
   - 와이어프레임의 화면 2: 카메라 촬영 화면 UI(가이드라인, 컨트롤 버튼 등)를 구현합니다.
 - [x] **카메라 촬영, 사진 선택 로직 구현**
   - 촬영 버튼을 누르면 사진 촬영
@@ -51,7 +51,7 @@
   - 촬영 버튼을 눌렀을 때 사진을 찍고, (원본 이미지를 바탕으로) ML Kit의 `recognizeText` 함수로 텍스트를 추출하는 로직을 구현합니다.
 - [x] **유통기한 OCR 기능 구현 (핵심)**
   - `dayjs` 등을 활용해 다양한 날짜 형식(예: ~까지, YYYY년 MM월 DD일, YYYY.MM.DD, YY.MM.DD, MM/DD/YY, DD/MM/YY 등)을 찾는 정규식 로직을 구현합니다.
-- [ ] **`app/add-product.tsx` 수정 (화면 2: 유통기한 스캐너)**
+- [ ] **`app/scan-product.tsx` 수정 (화면 2: 유통기한 스캐너)**
   - 기존에 구현된 화면 하단에 '직접 입력(건너뛰기)' 버튼을 배치합니다.
 - [ ] **`app/product-form.tsx` 구현 (화면 3: 등록 폼)**
   - 상품명, 카테고리, 유통기한을 입력받는 폼 UI를 구현합니다.
