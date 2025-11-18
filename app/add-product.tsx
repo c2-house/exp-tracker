@@ -2,6 +2,13 @@ import { Feather, FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Image, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // TODO: Move to a shared constants file
@@ -22,9 +29,28 @@ export default function AddProductScreen() {
   const [expiryDate, setExpiryDate] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+  const animatedBackgroundColor = useSharedValue('#FCFCFC');
+  const animatedBorderColor = useSharedValue('#D1D5DB');
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    backgroundColor: animatedBackgroundColor.value,
+    borderColor: animatedBorderColor.value,
+  }));
+
   useEffect(() => {
     if (params.scannedExpiryDate) {
       setExpiryDate(params.scannedExpiryDate);
+      animatedBackgroundColor.value = withRepeat(
+        withTiming('#E5EFFF', { duration: 700, easing: Easing.bezier(0.25, -0.5, 0.25, 1) }),
+        4,
+        true
+      );
+      animatedBorderColor.value = withRepeat(
+        withTiming('#0061FF', { duration: 700, easing: Easing.bezier(0.25, -0.5, 0.25, 1) }),
+        4,
+        true
+      );
     }
   }, [params.scannedExpiryDate]);
 
@@ -75,7 +101,8 @@ export default function AddProductScreen() {
 
           <View>
             <Text className="text-base font-semibold mb-2">유통기한</Text>
-            <TextInput
+            <AnimatedTextInput
+              style={animatedStyle}
               value={expiryDate}
               onChangeText={setExpiryDate}
               keyboardType="numeric"
@@ -120,7 +147,7 @@ export default function AddProductScreen() {
       <View className="flex-row px-5 pb-4" style={{ paddingBottom: insets.bottom || 20 }}>
         <Pressable
           onPress={handleSave}
-          className="flex-1 bg-primary-1 rounded-lg items-center py-4"
+          className="flex-1 bg-primary-1 rounded-lg items-center py-3"
         >
           <Text className="text-white text-lg font-bold">저장</Text>
         </Pressable>
