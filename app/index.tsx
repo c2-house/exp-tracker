@@ -63,19 +63,21 @@ export default function HomeScreen() {
       {/* Header & Search */}
       <View className="flex-row items-center justify-between px-4 h-header">
         {isSearchActive ? (
-          <View className="flex-1 flex-row items-center bg-white rounded-lg px-3 border border-gray-100 focus-within:border-primary-1">
-            <Feather name="search" size={24} color="#666876" />
+          <View className="relative flex-1 flex-row items-center">
+            <Feather name="search" size={24} color="#8C8E98" className="absolute left-3 z-10" />
             <TextInput
-              className="flex-1 mx-2 py-2.5 bg-white text-black-1 outline-none placeholder:text-black-3"
+              className="flex-1 px-11 py-2.5 bg-white rounded-lg border border-gray-100 focus:border-primary-1 focus:outline-none"
               placeholder="상품 이름 검색"
               value={searchQuery}
               onChangeText={setSearchQuery}
               onBlur={handleBlurSearch}
+              autoComplete="off"
+              autoCorrect={false}
               autoFocus
             />
-            <Pressable onPress={handleCancelSearch}>
-              <View className="w-5 h-5 items-center justify-center bg-black-3/40 rounded-full">
-                <Feather name="x" size={14} color="white" />
+            <Pressable onPress={handleCancelSearch} className="absolute right-3 z-10">
+              <View className="w-6 h-6 items-center justify-center bg-gray-300 rounded-full">
+                <Feather name="x" size={16} color="white" />
               </View>
             </Pressable>
           </View>

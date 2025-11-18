@@ -1,5 +1,6 @@
 import type { Product } from '@/lib/types';
 import { calculateDaysLeft, getDdayString } from '@/lib/utils';
+import { FontAwesome } from '@expo/vector-icons';
 import { Image, Pressable, Text, View } from 'react-native';
 
 export default function ProductListItem({ item }: { item: Product }) {
@@ -16,10 +17,13 @@ export default function ProductListItem({ item }: { item: Product }) {
         elevation: 3,
       }}
     >
-      <Image
-        source={item.image ? { uri: item.image } : require('../assets/images/placeholder.png')}
-        className="h-20 w-20 rounded-lg"
-      />
+      {item.image ? (
+        <Image source={{ uri: item.image }} className="h-20 w-20 rounded-lg" resizeMode="cover" />
+      ) : (
+        <View className="h-20 w-20 rounded-lg items-center justify-center bg-gray-100 overflow-hidden">
+          <FontAwesome name="image" size={24} color="#8C8E98" />
+        </View>
+      )}
       {/* 상품명, 유통기한 */}
       <View className="mx-4 flex-1">
         <Text className="text-lg font-semibold text-black-1" numberOfLines={1}>

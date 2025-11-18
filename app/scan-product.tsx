@@ -1,5 +1,5 @@
 import { extractExpiryDate } from '@/lib/utils';
-import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
+import { Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import TextRecognition, { TextRecognitionScript } from '@react-native-ml-kit/text-recognition';
 import { CameraView, useCameraPermissions, type FlashMode } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
@@ -163,7 +163,7 @@ export default function ScanProductScreen() {
             onPress={pickImage}
             disabled={isProcessing}
           >
-            <AntDesign name="picture" size={24} color="white" />
+            <FontAwesome name="image" size={24} color="white" />
           </TouchableOpacity>
           <Pressable onPress={takePicture} disabled={isProcessing}>
             {({ pressed }) => (

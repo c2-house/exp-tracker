@@ -8,14 +8,14 @@ type CategoryFilterProps = {
 
 export default function CategoryFilter({ currentCategory, onSelectCategory }: CategoryFilterProps) {
   return (
-    <View className="">
+    <View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View className="flex-row gap-3 px-4">
           {categories.map((category) => (
             <Pressable
               key={category}
               onPress={() => onSelectCategory(category)}
-              className={`py-2 px-5 rounded-full border ${
+              className={`px-5 py-2 rounded-full border ${
                 currentCategory === category
                   ? 'bg-primary-1 border-primary-1'
                   : 'bg-primary-3 border-primary-2'
