@@ -3,7 +3,7 @@ import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import TextRecognition, { TextRecognitionScript } from '@react-native-ml-kit/text-recognition';
 import { CameraView, useCameraPermissions, type FlashMode } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -19,12 +19,13 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ScanProductScreen() {
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const cameraRef = useRef<CameraView>(null);
   const [permission, requestPermission] = useCameraPermissions();
+
   const [flashMode, setFlashMode] = useState<FlashMode>('auto');
   const [isProcessing, setIsProcessing] = useState(false);
-  const cameraRef = useRef<CameraView>(null);
-  const insets = useSafeAreaInsets();
-  const router = useRouter();
 
   useEffect(() => {
     if (!permission) requestPermission();
@@ -58,15 +59,21 @@ export default function ScanProductScreen() {
     try {
       const result = await TextRecognition.recognize(uri, TextRecognitionScript.KOREAN);
       const expiryDate = extractExpiryDate(result.text);
-      console.log('🚀 ~ scan-product.tsx:61 ~ expiryDate:', expiryDate);
 
-      // router.push({
-      //   pathname: '/confirm-product',
-      //   params: { imageUri: uri, recognizedText },
-      // });
+      if (expiryDate) {
+        router.push({
+          pathname: '/add-product',
+          params: { scannedExpiryDate: expiryDate, imageUri: uri },
+        });
+      } else {
+        Alert.alert(
+          '유통기한을 찾지 못했어요',
+          '사진을 다시 찍거나, 직접 입력하기 버튼을 눌러주세요.'
+        );
+      }
     } catch (e) {
       console.error(e);
-      Alert.alert('오류', '텍스트를 인식하는 데 실패했습니다. 다시 시도해 주세요.');
+      Alert.alert('오류', '텍스트를 인식하지 못했어요. 다시 시도해 주세요.');
     } finally {
       setIsProcessing(false);
     }
@@ -77,10 +84,7 @@ export default function ScanProductScreen() {
       Alert.alert(
         '카메라 접근 권한 필요',
         '이 기능을 사용하려면 설정에서 카메라 접근을 허용해주세요.',
-        [
-          { text: '취소', style: 'destructive' },
-          { text: '설정 열기', onPress: () => Linking.openSettings() },
-        ]
+        [{ text: '확인', onPress: () => Linking.openSettings() }]
       );
       return;
     }
@@ -90,7 +94,6 @@ export default function ScanProductScreen() {
         shutterSound: false,
       });
       if (photo?.uri) {
-        console.log('Photo taken:', photo.uri);
         await processImage(photo.uri);
       }
     }
@@ -102,10 +105,7 @@ export default function ScanProductScreen() {
       Alert.alert(
         '사진 접근 권한 필요',
         '이 기능을 사용하려면 설정에서 사진(저장공간) 접근을 허용해주세요.',
-        [
-          { text: '취소', style: 'destructive' },
-          { text: '설정 열기', onPress: () => Linking.openSettings() },
-        ]
+        [{ text: '확인', onPress: () => Linking.openSettings() }]
       );
       return;
     }
@@ -116,7 +116,6 @@ export default function ScanProductScreen() {
     });
 
     if (!result.canceled && result.assets[0].uri) {
-      console.log('Image picked:', result.assets[0].uri);
       await processImage(result.assets[0].uri);
     }
   };
@@ -135,61 +134,68 @@ export default function ScanProductScreen() {
         style={{ paddingTop: insets.top + 10 }}
       >
         <View className="flex-row justify-between items-center">
-          <View className="w-8" />
-          <Text className="text-white text-lg font-bold">상품 등록</Text>
           <Pressable className="p-1" onPress={() => router.back()}>
             <Feather name="x" size={24} color="white" />
           </Pressable>
+          <Text className="text-white text-lg font-bold">유통기한 스캔</Text>
+          <View className="w-8" />
         </View>
         <Text className="text-white text-base text-center mt-5">
-          상품명이 잘 보이게 촬영해주세요.
+          유통기한이 잘 보이게 찍어주세요.
         </Text>
       </View>
 
       {/* Footer */}
-      <View
-        className="absolute bottom-0 left-0 right-0 flex-row justify-between items-center px-10 pt-6 bg-black/50"
-        style={{ paddingBottom: insets.bottom + 20 }}
-      >
-        <TouchableOpacity
-          className="w-14 h-14 justify-center items-center bg-white/30 rounded-full"
-          onPress={pickImage}
-          disabled={isProcessing}
+      <View className="absolute bottom-0 left-0 right-0">
+        <Link
+          replace
+          href="/add-product"
+          className="px-4 py-2 rounded-full w-fit mx-auto mb-4 bg-black/50 text-white font-semibold text-center"
         >
-          <AntDesign name="picture" size={24} color="white" />
-        </TouchableOpacity>
-        <Pressable onPress={takePicture} disabled={isProcessing}>
-          {({ pressed }) => (
-            <View
-              className={`w-[85px] h-[85px] justify-center items-center rounded-full bg-transparent border-[5px] border-white ${
-                pressed || isProcessing ? 'opacity-50' : 'opacity-100'
-              }`}
-            >
-              <View className="w-[70px] h-[70px] justify-center items-center rounded-full bg-white" />
-            </View>
-          )}
-        </Pressable>
-        <Pressable
-          className="w-14 h-14 justify-center items-center bg-white/30 rounded-full"
-          onPress={changeFlashMode}
-          disabled={isProcessing}
+          직접 입력하기
+        </Link>
+        <View
+          className="flex-row justify-between items-center px-10 pt-6 bg-black/50"
+          style={{ paddingBottom: insets.bottom + 20 }}
         >
-          <Ionicons
-            name={
-              flashMode === 'auto' ? 'flash-outline' : flashMode === 'on' ? 'flash' : 'flash-off'
-            }
-            size={24}
-            color={flashMode === 'on' ? '#FF9500' : 'white'}
-          />
-        </Pressable>
+          <TouchableOpacity
+            className="w-14 h-14 justify-center items-center bg-white/30 rounded-full"
+            onPress={pickImage}
+            disabled={isProcessing}
+          >
+            <AntDesign name="picture" size={24} color="white" />
+          </TouchableOpacity>
+          <Pressable onPress={takePicture} disabled={isProcessing}>
+            {({ pressed }) => (
+              <View
+                className={`w-[85px] h-[85px] justify-center items-center rounded-full bg-transparent border-[5px] border-white ${
+                  pressed || isProcessing ? 'opacity-50' : 'opacity-100'
+                }`}
+              >
+                <View className="w-[70px] h-[70px] justify-center items-center rounded-full bg-white" />
+              </View>
+            )}
+          </Pressable>
+          <Pressable
+            className="w-14 h-14 justify-center items-center bg-white/30 rounded-full"
+            onPress={changeFlashMode}
+            disabled={isProcessing}
+          >
+            <Ionicons
+              name={
+                flashMode === 'auto' ? 'flash-outline' : flashMode === 'on' ? 'flash' : 'flash-off'
+              }
+              size={24}
+              color={flashMode === 'on' ? '#FF9500' : 'white'}
+            />
+          </Pressable>
+        </View>
       </View>
 
+      {/* Loading Indicator */}
       {isProcessing && (
-        <View
-          className="absolute inset-0 justify-center items-center"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
-        >
-          <ActivityIndicator size="large" color="#fff" />
+        <View className="absolute inset-0 justify-center items-center bg-black/60 z-10">
+          <ActivityIndicator size="large" color="white" />
           <Text className="text-white text-lg mt-4">사진을 분석하고 있어요...</Text>
         </View>
       )}

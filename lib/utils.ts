@@ -49,7 +49,6 @@ export const extractExpiryDate = (text: string): string | null => {
     .replace(/(?<=(^|[^A-Za-z\d])\d{2,4})\s+(?=\d)/g, '.') // 2-4자리 숫자 사이의 공백을 '.'으로 변경
     .replace(/\s*\.\s*/g, '.') // '.' 주변의 공백 제거
     .replace(/[^A-Za-z\d.]/g, ' '); // 숫자와 알파벳 이외의 문자는 공백으로 변경
-  console.log('🚀 ~ utils.ts:52 ~ cleanedText:', cleanedText);
 
   // 다양한 날짜 형식을 찾기 위한 정규식
   const dateRegexPatterns = [
@@ -66,7 +65,6 @@ export const extractExpiryDate = (text: string): string | null => {
   dateRegexPatterns.forEach((pattern) => {
     const regex = new RegExp(pattern.source, 'g');
     const matches = cleanedText.match(regex);
-    console.log('🚀 ~ utils.ts:69 ~ matches:', matches);
 
     if (matches) {
       matches.forEach((match) => {
@@ -77,8 +75,8 @@ export const extractExpiryDate = (text: string): string | null => {
             // MM.DD 포맷 처리: 연도가 없으면 현재 연도 또는 다음 연도 부여
             if (format.startsWith('M')) {
               const dateWithCurrentYear = parsedDate.year(currentYear);
-              // 현재 12월이고 MM이 1월이면 다음 해로 설정
-              if (today.month() === 11 && parsedDate.month() === 0) {
+              // 유통기한이 1개월 이상 지난 경우 다음 해로 설정
+              if (dateWithCurrentYear.isBefore(today.subtract(1, 'month'))) {
                 parsedDate = dateWithCurrentYear.add(1, 'year');
               } else {
                 parsedDate = dateWithCurrentYear;
@@ -99,7 +97,6 @@ export const extractExpiryDate = (text: string): string | null => {
     }
   });
 
-  console.log('🚀 ~ utils.ts:102 ~ foundDates:', foundDates);
   if (foundDates.length === 0) {
     return null;
   } else {
