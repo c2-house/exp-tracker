@@ -1,4 +1,4 @@
-import { categories } from '@/lib/constants';
+import { categories } from '@/lib/constants/products';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
 type CategoryFilterProps = {

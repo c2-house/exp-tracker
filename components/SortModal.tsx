@@ -1,4 +1,4 @@
-import { sortOptions } from '@/lib/constants';
+import { sortOptions } from '@/lib/constants/products';
 import type { SortType } from '@/lib/types';
 import { Modal, Pressable, Text, View } from 'react-native';
 

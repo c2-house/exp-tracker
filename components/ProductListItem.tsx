@@ -1,3 +1,4 @@
+import { COLORS } from '@/lib/constants/colors';
 import type { Product } from '@/lib/types';
 import { calculateDaysLeft, getDdayString } from '@/lib/utils/date';
 import { FontAwesome } from '@expo/vector-icons';
@@ -10,7 +11,7 @@ export default function ProductListItem({ item }: { item: Product }) {
     <Pressable
       className="flex-row items-center rounded-2xl border border-gray-100 bg-white p-3 pr-4 shadow-sm"
       style={{
-        shadowColor: '#000',
+        shadowColor: 'black',
         shadowOpacity: 0.05,
         shadowRadius: 5,
         shadowOffset: { width: 0, height: 3 },
@@ -21,7 +22,7 @@ export default function ProductListItem({ item }: { item: Product }) {
         <Image source={{ uri: item.image }} className="h-20 w-20 rounded-lg" resizeMode="cover" />
       ) : (
         <View className="h-20 w-20 rounded-lg items-center justify-center bg-gray-100 overflow-hidden">
-          <FontAwesome name="image" size={24} color="#8C8E98" />
+          <FontAwesome name="image" size={24} color={COLORS.black[3]} />
         </View>
       )}
       {/* 상품명, 유통기한 */}

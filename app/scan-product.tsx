@@ -1,3 +1,4 @@
+import { COLORS } from '@/lib/constants/colors';
 import { extractExpiryDate } from '@/lib/utils/ocr';
 import { Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import TextRecognition, { TextRecognitionScript } from '@react-native-ml-kit/text-recognition';
@@ -186,7 +187,7 @@ export default function ScanProductScreen() {
                 flashMode === 'auto' ? 'flash-outline' : flashMode === 'on' ? 'flash' : 'flash-off'
               }
               size={24}
-              color={flashMode === 'on' ? '#FF9500' : 'white'}
+              color={flashMode === 'on' ? COLORS.status.warning : 'white'}
             />
           </Pressable>
         </View>

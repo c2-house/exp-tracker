@@ -1,7 +1,8 @@
 import CategoryFilter from '@/components/CategoryFilter';
 import ProductListItem from '@/components/ProductListItem';
 import SortModal from '@/components/SortModal';
-import { categories, sampleItems, sortOptions } from '@/lib/constants';
+import { COLORS } from '@/lib/constants/colors';
+import { categories, sampleItems, sortOptions } from '@/lib/constants/products';
 import type { SortType } from '@/lib/types';
 import { sortProducts } from '@/lib/utils/product';
 import { Feather } from '@expo/vector-icons';
@@ -64,11 +65,16 @@ export default function HomeScreen() {
       <View className="flex-row items-center justify-between px-4 h-header">
         {isSearchActive ? (
           <View className="relative flex-1 flex-row items-center">
-            <Feather name="search" size={24} color="#8C8E98" className="absolute left-3 z-10" />
+            <Feather
+              name="search"
+              size={24}
+              color={COLORS.black[3]}
+              className="absolute left-3 z-10"
+            />
             <TextInput
               className="flex-1 px-11 py-2.5 bg-white rounded-lg border border-gray-100 focus:border-primary-1 focus:outline-none"
               placeholder="상품 이름 검색"
-              placeholderTextColor="#8C8E98"
+              placeholderTextColor={COLORS.black[3]}
               value={searchQuery}
               onChangeText={setSearchQuery}
               onBlur={handleBlurSearch}
@@ -87,11 +93,11 @@ export default function HomeScreen() {
             <Text className="text-2xl font-bold text-black-1">Shelfie</Text>
             <View className="flex-row items-center gap-2">
               <Pressable className="p-1" onPress={() => setIsSearchActive(true)}>
-                <Feather name="search" size={24} color="#191D31" />
+                <Feather name="search" size={24} color={COLORS.black[1]} />
               </Pressable>
               <Link href="/notifications" asChild>
                 <Pressable className="p-1">
-                  <Feather name="bell" size={24} color="#191D31" />
+                  <Feather name="bell" size={24} color={COLORS.black[1]} />
                 </Pressable>
               </Link>
             </View>
@@ -137,7 +143,7 @@ export default function HomeScreen() {
         <Pressable
           className="absolute bottom-12 right-6 h-[64px] w-[64px] items-center justify-center rounded-full bg-primary-1 shadow-lg"
           style={{
-            shadowColor: '#0061FF',
+            shadowColor: COLORS.primary[1],
             shadowOpacity: 0.3,
             shadowRadius: 10,
             shadowOffset: { width: 0, height: 4 },

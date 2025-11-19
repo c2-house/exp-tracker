@@ -1,3 +1,4 @@
+import { COLORS } from '@/lib/constants/colors';
 import { AnimatedTextInput, useExpiryDateAnimation } from '@/lib/hooks/useExpiryDateAnimation';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -64,7 +65,7 @@ export default function AddProductScreen() {
       {/* Header */}
       <View className="h-header flex-row items-center justify-between px-4 border-b border-gray-200">
         <Pressable className="p-1" onPress={() => router.replace('/')}>
-          <Feather name="x" size={24} color="#191D31" />
+          <Feather name="x" size={24} color={COLORS.black[1]} />
         </Pressable>
         <Text className="text-lg font-bold">상품 추가</Text>
         <View className="w-8" />
@@ -75,7 +76,7 @@ export default function AddProductScreen() {
           {params.imageUri ? (
             <Image source={{ uri: params.imageUri }} className="w-full h-full" resizeMode="cover" />
           ) : (
-            <FontAwesome name="image" size={28} color="#8C8E98" />
+            <FontAwesome name="image" size={28} color={COLORS.black[3]} />
           )}
         </View>
 
@@ -88,7 +89,7 @@ export default function AddProductScreen() {
               value={productName}
               onChangeText={setProductName}
               placeholder="예) 우유, 계란"
-              placeholderTextColor="#8C8E98"
+              placeholderTextColor={COLORS.black[3]}
               autoComplete="off"
               autoCorrect={false}
               autoFocus={params.scannedExpiryDate ? false : true}
@@ -109,7 +110,7 @@ export default function AddProductScreen() {
                 onFocus={() => handleFocus('year')}
                 onBlur={() => handleBlur('year')}
                 placeholder="YYYY"
-                placeholderTextColor="#8C8E98"
+                placeholderTextColor={COLORS.black[3]}
                 textAlign="center"
                 maxLength={4}
                 keyboardType="numeric"
@@ -126,7 +127,7 @@ export default function AddProductScreen() {
                 onFocus={() => handleFocus('month')}
                 onBlur={() => handleBlur('month')}
                 placeholder="MM"
-                placeholderTextColor="#8C8E98"
+                placeholderTextColor={COLORS.black[3]}
                 textAlign="center"
                 maxLength={2}
                 keyboardType="numeric"
@@ -143,7 +144,7 @@ export default function AddProductScreen() {
                 onFocus={() => handleFocus('day')}
                 onBlur={() => handleBlur('day')}
                 placeholder="DD"
-                placeholderTextColor="#8C8E98"
+                placeholderTextColor={COLORS.black[3]}
                 textAlign="center"
                 maxLength={2}
                 keyboardType="numeric"

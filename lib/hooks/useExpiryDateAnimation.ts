@@ -1,3 +1,4 @@
+import { COLORS } from '@/lib/constants/colors';
 import { useEffect, useState } from 'react';
 import { TextInput } from 'react-native';
 import Animated, {
@@ -29,34 +30,34 @@ export function useExpiryDateAnimation(scannedExpiryDate?: string) {
     setIsFocused((prev) => ({ ...prev, [field]: false }));
   };
 
-  const animatedBackgroundColor = useSharedValue('#FCFCFC');
-  const animatedBorderColor = useSharedValue('#D1D5DB');
-  const animatedTextColor = useSharedValue('#8C8E98');
+  const animatedBackgroundColor = useSharedValue<string>(COLORS.background);
+  const animatedBorderColor = useSharedValue<string>(COLORS.gray[300]);
+  const animatedTextColor = useSharedValue<string>(COLORS.black[3]);
 
   const repeatedTiming = (toValue: string) =>
     withRepeat(withTiming(toValue, { duration: DURATION, easing: EASING }), REPEAT, true);
 
   useEffect(() => {
     if (scannedExpiryDate) {
-      animatedBackgroundColor.value = repeatedTiming('#E5EFFF');
-      animatedBorderColor.value = repeatedTiming('#0061FF');
-      animatedTextColor.value = repeatedTiming('#0061FF');
+      animatedBackgroundColor.value = repeatedTiming(COLORS.primary[2]);
+      animatedBorderColor.value = repeatedTiming(COLORS.primary[1]);
+      animatedTextColor.value = repeatedTiming(COLORS.primary[1]);
     }
   }, [scannedExpiryDate]);
 
   const animatedYearStyle = useAnimatedStyle(() => ({
     backgroundColor: animatedBackgroundColor.value,
-    borderColor: isFocused.year ? '#0061FF' : animatedBorderColor.value,
+    borderColor: isFocused.year ? COLORS.primary[1] : animatedBorderColor.value,
   }));
 
   const animatedMonthStyle = useAnimatedStyle(() => ({
     backgroundColor: animatedBackgroundColor.value,
-    borderColor: isFocused.month ? '#0061FF' : animatedBorderColor.value,
+    borderColor: isFocused.month ? COLORS.primary[1] : animatedBorderColor.value,
   }));
 
   const animatedDayStyle = useAnimatedStyle(() => ({
     backgroundColor: animatedBackgroundColor.value,
-    borderColor: isFocused.day ? '#0061FF' : animatedBorderColor.value,
+    borderColor: isFocused.day ? COLORS.primary[1] : animatedBorderColor.value,
   }));
 
   const animatedTextStyle = useAnimatedStyle(() => ({
