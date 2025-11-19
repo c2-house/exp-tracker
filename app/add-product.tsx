@@ -20,6 +20,10 @@ const CATEGORIES = [
   { id: 'etc', name: '기타' },
 ];
 
+const DURATION = 700;
+const EASING = Easing.bezier(0.25, -0.5, 0.25, 1);
+const REPEAT = 6;
+
 export default function AddProductScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -33,22 +37,32 @@ export default function AddProductScreen() {
   const animatedBackgroundColor = useSharedValue('#FCFCFC');
   const animatedBorderColor = useSharedValue('#D1D5DB');
 
-  const animatedStyle = useAnimatedStyle(() => ({
+  const animatedTextInputStyle = useAnimatedStyle(() => ({
     backgroundColor: animatedBackgroundColor.value,
     borderColor: animatedBorderColor.value,
+  }));
+
+  const animatedTextColor = useSharedValue('#8C8E98');
+  const animatedTextStyle = useAnimatedStyle(() => ({
+    color: animatedTextColor.value,
   }));
 
   useEffect(() => {
     if (params.scannedExpiryDate) {
       setExpiryDate(params.scannedExpiryDate);
       animatedBackgroundColor.value = withRepeat(
-        withTiming('#E5EFFF', { duration: 700, easing: Easing.bezier(0.25, -0.5, 0.25, 1) }),
-        4,
+        withTiming('#E5EFFF', { duration: DURATION, easing: EASING }),
+        REPEAT,
         true
       );
       animatedBorderColor.value = withRepeat(
-        withTiming('#0061FF', { duration: 700, easing: Easing.bezier(0.25, -0.5, 0.25, 1) }),
-        4,
+        withTiming('#0061FF', { duration: DURATION, easing: EASING }),
+        REPEAT,
+        true
+      );
+      animatedTextColor.value = withRepeat(
+        withTiming('#0061FF', { duration: DURATION, easing: EASING }),
+        REPEAT,
         true
       );
     }
@@ -90,29 +104,31 @@ export default function AddProductScreen() {
           <View>
             <Text className="text-base font-semibold mb-2">상품명</Text>
             <TextInput
+              className="border border-gray-300 rounded-lg px-4 py-3 focus:border-primary-1 focus:outline-none"
               value={productName}
               onChangeText={setProductName}
               placeholder="예) 우유, 계란"
+              placeholderTextColor="#8C8E98"
               autoComplete="off"
               autoCorrect={false}
-              className="border border-gray-300 rounded-lg px-4 py-3 focus:border-primary-1 focus:outline-none"
             />
           </View>
 
           <View>
             <Text className="text-base font-semibold mb-2">유통기한</Text>
             <AnimatedTextInput
-              style={animatedStyle}
+              className="border border-gray-300 rounded-lg px-4 py-3 focus:border-primary-1 focus:outline-none"
+              style={animatedTextInputStyle}
               value={expiryDate}
               onChangeText={setExpiryDate}
               keyboardType="numeric"
               placeholder="YYYY-MM-DD"
-              className="border border-gray-300 rounded-lg px-4 py-3 focus:border-primary-1 focus:outline-none"
+              placeholderTextColor="#8C8E98"
             />
             {params.scannedExpiryDate && (
-              <Text className="text-sm text-black-3 mt-2">
+              <Animated.Text style={animatedTextStyle} className="text-sm text-black-3 mt-2">
                 스캔된 날짜가 정확한지 확인해주세요.
-              </Text>
+              </Animated.Text>
             )}
           </View>
 

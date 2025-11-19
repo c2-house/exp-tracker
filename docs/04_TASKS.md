@@ -56,17 +56,17 @@
   - OCR 성공 시: `router.replace('/add-product', { scannedExpiryDate: '...' })`를 사용하여 스캐너를 스택에서 지우고 폼으로 이동합니다.
   - OCR 실패 시: 화면 이동을 막고, Toast 컴포넌트를 사용해 실패 메시지를 띄우는 로직을 추가합니다.
   - 건너뛰기 시: `router.replace('/add-product')`으로 빈 폼으로 이동합니다.
-- [ ] **`app/add-product.tsx` 구현 (화면 3: 등록 폼)**
+- [x] **`app/add-product.tsx` 구현 (화면 3: 등록 폼)**
   - 상품명, 카테고리, 유통기한을 입력받는 폼 UI를 구현합니다.
   - `useLocalSearchParams`를 통해 이전 화면에서 넘겨준 `scannedExpiryDate`(string)를 받습니다.
   - `scannedExpiryDate`가 있으면:
     - 유통기한 state를 해당 값으로 업데이트합니다.
     - `react-native-reanimated` 등을 사용하여 유통기한 입력 필드에 일회성 강조 애니메이션을 적용합니다.
     - 유통기한 입력 필드 하단에 날짜 확인을 유도하는 문구를 표시합니다.
-- [ ] **저장 로직 구현**
-  - `@react-native-async-storage/async-storage` 라이브러리를 설치합니다.
-  - `app/add-product.tsx`(폼 화면)에서 '저장' 버튼을 누르면, 폼의 모든 데이터를 취합하여 `AsyncStorage`에 추가하고, 메인 화면(`app/index.tsx`)으로 복귀합니다.
-  - 데이터가 정상적으로 저장되면 메인 화면 하단에 토스트 팝업을 표시합니다.
+- [ ] **이미지 압축 및 데이터 저장 로직 구현**
+  - `expo-image-manipulator`, `@react-native-async-storage/async-storage` 라이브러리를 설치합니다.
+  - `app/add-product.tsx`(폼 화면)에서 '저장' 버튼을 누르면, `expo-image-manipulator`를 사용해 원본 이미지를 가로 300px 정도로 리사이징 및 압축한 후, 폼의 모든 데이터를 취합하여 `AsyncStorage`에 추가합니다.
+  - 데이터가 정상적으로 저장되면, 메인 화면(`app/index.tsx`)으로 복귀하고 하단에 토스트 팝업을 표시합니다.
   - 앱 시작 시 `AsyncStorage`에서 데이터를 비동기적으로 불러와 더미 데이터 `sampleItems`를 대체합니다.
 
 ## 4단계: 상품 수정/삭제 흐름

@@ -68,6 +68,7 @@ export default function HomeScreen() {
             <TextInput
               className="flex-1 px-11 py-2.5 bg-white rounded-lg border border-gray-100 focus:border-primary-1 focus:outline-none"
               placeholder="상품 이름 검색"
+              placeholderTextColor="#8C8E98"
               value={searchQuery}
               onChangeText={setSearchQuery}
               onBlur={handleBlurSearch}
