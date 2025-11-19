@@ -1,4 +1,4 @@
-import { extractExpiryDate } from '@/lib/utils';
+import { extractExpiryDate } from '@/lib/utils/ocr';
 import { Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import TextRecognition, { TextRecognitionScript } from '@react-native-ml-kit/text-recognition';
 import { CameraView, useCameraPermissions, type FlashMode } from 'expo-camera';

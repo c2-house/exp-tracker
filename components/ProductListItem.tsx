@@ -1,5 +1,5 @@
 import type { Product } from '@/lib/types';
-import { calculateDaysLeft, getDdayString } from '@/lib/utils';
+import { calculateDaysLeft, getDdayString } from '@/lib/utils/date';
 import { FontAwesome } from '@expo/vector-icons';
 import { Image, Pressable, Text, View } from 'react-native';
 

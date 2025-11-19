@@ -3,7 +3,7 @@ import ProductListItem from '@/components/ProductListItem';
 import SortModal from '@/components/SortModal';
 import { categories, sampleItems, sortOptions } from '@/lib/constants';
 import type { SortType } from '@/lib/types';
-import { sortProducts } from '@/lib/utils';
+import { sortProducts } from '@/lib/utils/product';
 import { Feather } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { useMemo, useState } from 'react';
