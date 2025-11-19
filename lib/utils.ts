@@ -52,13 +52,21 @@ export const extractExpiryDate = (text: string): string | null => {
 
   // 다양한 날짜 형식을 찾기 위한 정규식
   const dateRegexPatterns = [
-    /\d{4}\.\d{1,2}\.\d{1,2}/, // YYYY.MM.DD
-    /\d{2}\.\d{1,2}\.\d{1,2}/, // YY.MM.DD
-    /\d{1,2}\.\d{1,2}/, // MM.DD
+    /\d{4}\.\d{2}\.\d{2}/, // YYYY.MM.DD
+    /\d{2}\.\d{2}\.\d{2}/, // YY.MM.DD
+    /\d{2}\.\d{2}/, // MM.DD
     /\d{8}/, // YYYYMMDD
+    /\d{2}\.\d{2}\.\d{4}/, // DD.MM.YYYY or MM.DD.YYYY
   ];
 
-  const parsingFormats = ['YYYY.MM.DD', 'YY.MM.DD', 'MM.DD', 'YYYYMMDD'];
+  const parsingFormats = [
+    'YYYY.MM.DD',
+    'YY.MM.DD',
+    'MM.DD',
+    'YYYYMMDD',
+    'DD.MM.YYYY',
+    'MM.DD.YYYY',
+  ];
 
   const foundDates: dayjs.Dayjs[] = [];
 
@@ -73,7 +81,7 @@ export const extractExpiryDate = (text: string): string | null => {
 
           if (parsedDate.isValid()) {
             // MM.DD 포맷 처리: 연도가 없으면 현재 연도 또는 다음 연도 부여
-            if (format.startsWith('M')) {
+            if (format === 'MM.DD') {
               const dateWithCurrentYear = parsedDate.year(currentYear);
               // 유통기한이 1개월 이상 지난 경우 다음 해로 설정
               if (dateWithCurrentYear.isBefore(today.subtract(1, 'month'))) {
@@ -100,7 +108,7 @@ export const extractExpiryDate = (text: string): string | null => {
   if (foundDates.length === 0) {
     return null;
   } else {
-    // 날짜가 여러 개이면 가장 나중 날짜를 반환
+    // 날짜가 여러 개이면 가장 나중 날짜를 반환 (제조일자, 소비기한 모두 표기된 경우 대비)
     if (foundDates.length > 1) {
       foundDates.sort((a, b) => b.valueOf() - a.valueOf());
     }
