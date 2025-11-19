@@ -1,14 +1,9 @@
+import { AnimatedTextInput, useExpiryDateAnimation } from '@/lib/hooks/useExpiryDateAnimation';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Image, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // TODO: Move to a shared constants file
@@ -20,59 +15,44 @@ const CATEGORIES = [
   { id: 'etc', name: '기타' },
 ];
 
-const DURATION = 700;
-const EASING = Easing.bezier(0.25, -0.5, 0.25, 1);
-const REPEAT = 6;
-
 export default function AddProductScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ imageUri: string; scannedExpiryDate: string }>();
 
+  const yearInputRef = useRef<TextInput>(null);
+  const monthInputRef = useRef<TextInput>(null);
+  const dayInputRef = useRef<TextInput>(null);
+
   const [productName, setProductName] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
+  const [expiryDate, setExpiryDate] = useState({
+    year: '',
+    month: '',
+    day: '',
+  });
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
-  const animatedBackgroundColor = useSharedValue('#FCFCFC');
-  const animatedBorderColor = useSharedValue('#D1D5DB');
-
-  const animatedTextInputStyle = useAnimatedStyle(() => ({
-    backgroundColor: animatedBackgroundColor.value,
-    borderColor: animatedBorderColor.value,
-  }));
-
-  const animatedTextColor = useSharedValue('#8C8E98');
-  const animatedTextStyle = useAnimatedStyle(() => ({
-    color: animatedTextColor.value,
-  }));
+  const {
+    handleFocus,
+    handleBlur,
+    animatedYearStyle,
+    animatedMonthStyle,
+    animatedDayStyle,
+    animatedTextStyle,
+  } = useExpiryDateAnimation(params.scannedExpiryDate);
 
   useEffect(() => {
     if (params.scannedExpiryDate) {
-      setExpiryDate(params.scannedExpiryDate);
-      animatedBackgroundColor.value = withRepeat(
-        withTiming('#E5EFFF', { duration: DURATION, easing: EASING }),
-        REPEAT,
-        true
-      );
-      animatedBorderColor.value = withRepeat(
-        withTiming('#0061FF', { duration: DURATION, easing: EASING }),
-        REPEAT,
-        true
-      );
-      animatedTextColor.value = withRepeat(
-        withTiming('#0061FF', { duration: DURATION, easing: EASING }),
-        REPEAT,
-        true
-      );
+      const [year, month, day] = params.scannedExpiryDate.split('-');
+      setExpiryDate({ year, month, day });
     }
   }, [params.scannedExpiryDate]);
 
   const handleSave = () => {
     // TODO: Implement image compression and saving logic
     console.log({
-      productName,
-      expiryDate,
+      name: productName,
+      expiryDate: `${expiryDate.year}-${expiryDate.month}-${expiryDate.day}`,
       category: selectedCategory,
     });
     // Navigate back to home screen after saving
@@ -111,20 +91,64 @@ export default function AddProductScreen() {
               placeholderTextColor="#8C8E98"
               autoComplete="off"
               autoCorrect={false}
+              autoFocus={params.scannedExpiryDate ? false : true}
+              returnKeyType={params.scannedExpiryDate ? 'done' : 'next'}
+              onSubmitEditing={() => !params.scannedExpiryDate && yearInputRef.current?.focus()}
             />
           </View>
 
           <View>
-            <Text className="text-base font-semibold mb-2">유통기한</Text>
-            <AnimatedTextInput
-              className="border border-gray-300 rounded-lg px-4 py-3 focus:border-primary-1 focus:outline-none"
-              style={animatedTextInputStyle}
-              value={expiryDate}
-              onChangeText={setExpiryDate}
-              keyboardType="numeric"
-              placeholder="YYYY-MM-DD"
-              placeholderTextColor="#8C8E98"
-            />
+            <Text className="text-base font-semibold mb-2">유통기한 (YYYY-MM-DD)</Text>
+            <View className="flex-row items-center gap-x-1.5">
+              <AnimatedTextInput
+                ref={yearInputRef}
+                className="border rounded-lg p-3 w-20"
+                style={animatedYearStyle}
+                value={expiryDate.year}
+                onChangeText={(value) => setExpiryDate((prev) => ({ ...prev, year: value }))}
+                onFocus={() => handleFocus('year')}
+                onBlur={() => handleBlur('year')}
+                placeholder="YYYY"
+                placeholderTextColor="#8C8E98"
+                textAlign="center"
+                maxLength={4}
+                keyboardType="numeric"
+                returnKeyType="next"
+                onSubmitEditing={() => monthInputRef.current?.focus()}
+              />
+              <Text className="text-lg">-</Text>
+              <AnimatedTextInput
+                ref={monthInputRef}
+                className="border rounded-lg p-3 w-14"
+                style={animatedMonthStyle}
+                value={expiryDate.month}
+                onChangeText={(value) => setExpiryDate((prev) => ({ ...prev, month: value }))}
+                onFocus={() => handleFocus('month')}
+                onBlur={() => handleBlur('month')}
+                placeholder="MM"
+                placeholderTextColor="#8C8E98"
+                textAlign="center"
+                maxLength={2}
+                keyboardType="numeric"
+                returnKeyType="next"
+                onSubmitEditing={() => dayInputRef.current?.focus()}
+              />
+              <Text className="text-lg">-</Text>
+              <AnimatedTextInput
+                ref={dayInputRef}
+                className="border rounded-lg p-3 w-14"
+                style={animatedDayStyle}
+                value={expiryDate.day}
+                onChangeText={(value) => setExpiryDate((prev) => ({ ...prev, day: value }))}
+                onFocus={() => handleFocus('day')}
+                onBlur={() => handleBlur('day')}
+                placeholder="DD"
+                placeholderTextColor="#8C8E98"
+                textAlign="center"
+                maxLength={2}
+                keyboardType="numeric"
+              />
+            </View>
             {params.scannedExpiryDate && (
               <Animated.Text style={animatedTextStyle} className="text-sm text-black-3 mt-2">
                 스캔된 날짜가 정확한지 확인해주세요.
